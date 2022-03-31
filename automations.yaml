@@ -1787,7 +1787,7 @@
     at: '14:00:00'
     id: sol-off-auto
   - platform: time
-    at: 09:30:00
+    at: '10:00:00'
     id: sol-4->5
   condition: []
   action:
@@ -1796,7 +1796,7 @@
       - condition: trigger
         id: sol-on
       - condition: time
-        before: 09:00:00
+        before: '10:00:00'
       sequence:
       - service: cover.set_cover_position
         data:
@@ -1822,7 +1822,7 @@
       - condition: trigger
         id: sol-on
       - condition: time
-        after: 09:30:00
+        after: '10:01:00'
       sequence:
       - service: cover.set_cover_position
         data:
@@ -1868,7 +1868,7 @@
       - delay:
           hours: 0
           minutes: 0
-          seconds: 15
+          seconds: 10
           milliseconds: 0
       - service: cover.set_cover_position
         data:

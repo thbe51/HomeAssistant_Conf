@@ -1,0 +1,15 @@
+!*.yaml
+!*.md
+!*.sh
+!*.js*
+secrets.yaml
+*.log
+*.log.txt
+.storage
+.cloud
+.ssh
+.google.token
+home-assistant.log*
+google_calendars.yaml
+known_devices.yaml
+pushupdates.sh
