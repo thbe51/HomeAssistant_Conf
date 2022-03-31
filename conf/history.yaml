@@ -1,0 +1,21 @@
+use_include_order: true
+include:
+  domains:
+    - switch
+    - light
+  entities:
+    - device_tracker.sm_g988b
+exclude:
+  domains:
+    - media_player
+    - updater
+  entities:
+    - switch.rull_1
+    - switch.rull_2
+    - switch.rull_3
+    - switch.rull_4
+    - switch.rull_5
+    - switch.rull_6
+    - switch.rull_7
+    - switch.rull_8_2
+    - switch.rull_9_2

@@ -1,0 +1,10 @@
+- url: https://fonts.googleapis.com/css?family=Comfortaa&display=swap
+  type: css
+- url: /local/mini-graph-card-bundle.js?v=0.10.0
+  type: module
+- url: https://unpkg.com/moment@2.29.1/min/moment-with-locales.js
+  type: module
+- url: /local/banner-card.js?v=1
+  type: module
+- url: /hacsfiles/atomic-calendar-revive/atomic-calendar-revive.js
+  type: module

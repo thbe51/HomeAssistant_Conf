@@ -1,0 +1,3 @@
+   name: Input with both date and time
+   has_date: true
+   has_time: true

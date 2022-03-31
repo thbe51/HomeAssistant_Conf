@@ -1,0 +1,3 @@
+name: Input with only date
+has_date: true
+has_time: false

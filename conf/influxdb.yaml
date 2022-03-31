@@ -1,0 +1,7 @@
+host: 192.168.66.10
+port: 8086
+database: homeassistant
+username: !secret influxuser
+password: !secret influxpass
+max_retries: 9
+default_measurement: state

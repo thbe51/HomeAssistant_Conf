@@ -1,0 +1,5 @@
+somebody_home:
+  name: Somebody is home
+  entities:
+    - device_tracker.sm_g988b
+  all: false

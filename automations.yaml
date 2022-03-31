@@ -1,0 +1,2710 @@
+- id: '1631954468986'
+  alias: 'SYS: HA Backup'
+  description: ''
+  trigger:
+  - platform: time
+    at: '12:00'
+  condition:
+  - condition: time
+    weekday:
+    - mon
+    - wed
+    - fri
+    - sun
+  action:
+  - service: hassio.addon_stdin
+    data:
+      addon: 15d21743_samba_backup
+      input: trigger
+  - service: notify.notify_group
+    data:
+      message: Samba backup
+  mode: single
+- id: '1631954573296'
+  alias: 'SYS: Samba Backup sensor restart'
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: hassio.addon_stdin
+    data:
+      addon: 15d21743_samba_backup
+      input: restore sensor
+  - service: notify.notify_group
+    data:
+      title: Backup Completed
+      message: Samba Backup has been run.
+  mode: single
+- id: '1631970639587'
+  alias: 'REMOTE: Panic'
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 21bfe29f3829578639fc087913cc7ccc
+    domain: zwave_js
+    type: event.value_notification.scene_activation
+    property: sceneId
+    property_key:
+    endpoint: 0
+    command_class: 43
+    subtype: Endpoint 0
+    value: 1
+  condition: []
+  action:
+  - service: switch.toggle
+    target:
+      entity_id: switch.gangen
+    data: {}
+  mode: single
+- id: '1633291780750'
+  alias: 'TAGG: Belysning is scanned'
+  description: ''
+  trigger:
+  - platform: tag
+    tag_id: ee87e4fb-bd93-487d-bb08-3962ed7b0396
+  condition: []
+  action:
+  - service: light.toggle
+    target:
+      entity_id: light.hue_lampor
+    data:
+      color_temp: 333
+      brightness_pct: 55
+  mode: single
+- id: '1635503856748'
+  alias: 'RADIATOR: Element dag/natt timer'
+  description: ''
+  trigger:
+  - platform: time
+    at: input_datetime.element_dag
+    id: time.0500
+  - platform: time
+    id: time.2100
+    at: input_datetime.element_natt
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: time.0500
+      - condition: state
+        entity_id: input_boolean.elements
+        state: 'off'
+      - condition: state
+        entity_id: input_boolean.elements
+        state: 'off'
+      sequence:
+      - service: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.element_dag_natt
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: time.2100
+      - condition: state
+        entity_id: input_boolean.elements
+        state: 'off'
+      sequence:
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.element_dag_natt
+        data: {}
+    default: []
+  mode: single
+- id: '1635518157314'
+  alias: 'RADIATOR: Element 1-4 Low/High'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.element_1_4
+    id: element-1-4-low
+    to: 'on'
+  - platform: state
+    entity_id: input_boolean.element_1_4
+    id: element-1-4-high
+    to: 'off'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: element-1-4-low
+      sequence:
+      - service: climate.set_temperature
+        target:
+          entity_id:
+          - climate.popp_wireless_thermostatic_valve_trv
+          - climate.popp_wireless_thermostatic_valve_trv_2
+        data:
+          temperature: 18
+      - service: climate.set_temperature
+        data:
+          temperature: 20
+        target:
+          entity_id:
+          - climate.popp_wireless_thermostatic_valve_trv_3
+          - climate.popp_wireless_thermostatic_valve_trv_4
+    - conditions:
+      - condition: trigger
+        id: element-1-4-high
+      sequence:
+      - service: climate.set_temperature
+        target:
+          entity_id:
+          - climate.popp_wireless_thermostatic_valve_trv
+          - climate.popp_wireless_thermostatic_valve_trv_2
+        data:
+          temperature: 24
+      - service: climate.set_temperature
+        target:
+          entity_id:
+          - climate.popp_wireless_thermostatic_valve_trv_3
+          - climate.popp_wireless_thermostatic_valve_trv_4
+        data:
+          temperature: 26
+    default: []
+  mode: single
+- id: '1635518793395'
+  alias: 'RADIATOR: Element 6-7 Low/High'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.element_6_7
+    id: element-6-7-low
+    to: 'on'
+  - platform: state
+    entity_id: input_boolean.element_6_7
+    id: element-6-7-high
+    to: 'off'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: element-6-7-low
+      sequence:
+      - service: climate.set_temperature
+        data:
+          temperature: 19
+        target:
+          entity_id: climate.popp_wireless_thermostatic_valve_trv_5
+      - service: climate.set_temperature
+        data:
+          temperature: 21
+        target:
+          entity_id: climate.popp_wireless_thermostatic_valve_trv_6
+    - conditions:
+      - condition: trigger
+        id: element-6-7-high
+      sequence:
+      - service: climate.set_temperature
+        data:
+          temperature: 25
+        target:
+          entity_id: climate.popp_wireless_thermostatic_valve_trv_5
+      - service: climate.set_temperature
+        data:
+          temperature: 27
+        target:
+          entity_id: climate.popp_wireless_thermostatic_valve_trv_6
+    default: []
+  mode: single
+- id: '1635523377722'
+  alias: 'RADIATOR: Element Set dag/natt'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.element_dag_natt
+    id: el-set-dag
+    to: 'off'
+    from: 'on'
+  - platform: state
+    entity_id: input_boolean.element_dag_natt
+    id: el-set-night
+    to: 'on'
+    from: 'off'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: el-set-night
+      sequence:
+      - service: input_boolean.turn_off
+        target:
+          entity_id:
+          - input_boolean.element_1_4
+          - input_boolean.element_6_7
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: el-set-dag
+      sequence:
+      - service: input_boolean.turn_on
+        target:
+          entity_id:
+          - input_boolean.element_1_4
+          - input_boolean.element_6_7
+        data: {}
+    default: []
+  mode: single
+- id: '1635525114817'
+  alias: 'REMOTE: Panel sovrum'
+  description: ''
+  trigger:
+  - platform: device
+    device_id: fda51218d52fdd7bac944caa3543a6e5
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '002'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 002
+    id: panel-s-2
+  - platform: device
+    device_id: fda51218d52fdd7bac944caa3543a6e5
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '004'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 004
+    id: panel-s-4
+  - platform: device
+    device_id: fda51218d52fdd7bac944caa3543a6e5
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: 008
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 008
+    id: panel-s-8
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: panel-s-2
+      sequence:
+      - service: switch.toggle
+        target:
+          entity_id: switch.varmefilt
+        data: {}
+      - service: notify.lametric
+        data:
+          message: Sängvärme
+          data:
+            sound: notification
+          title: Sängvärme
+          target: Sovrum
+    - conditions:
+      - condition: trigger
+        id: panel-s-4
+      sequence:
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.rull_7_9
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: panel-s-8
+      sequence:
+      - service: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.rull_7_9
+        data: {}
+    default: []
+  mode: single
+- id: '1635527495085'
+  alias: 'REMOTE: Svart'
+  description: ''
+  trigger:
+  - platform: device
+    device_id: a84effc08fbbbde8720d919443847e79
+    domain: zwave_js
+    type: event.value_notification.scene_activation
+    property: sceneId
+    property_key:
+    endpoint: 0
+    command_class: 43
+    subtype: Endpoint 0
+    id: svart 3
+    value: 3
+  - platform: device
+    device_id: a84effc08fbbbde8720d919443847e79
+    domain: zwave_js
+    type: event.value_notification.scene_activation
+    property: sceneId
+    property_key:
+    endpoint: 0
+    command_class: 43
+    subtype: Endpoint 0
+    id: svart 1
+    value: 1
+  - platform: device
+    device_id: a84effc08fbbbde8720d919443847e79
+    domain: zwave_js
+    type: event.value_notification.scene_activation
+    property: sceneId
+    property_key:
+    endpoint: 0
+    command_class: 43
+    subtype: Endpoint 0
+    id: svart 5
+    value: 5
+  - platform: device
+    device_id: a84effc08fbbbde8720d919443847e79
+    domain: zwave_js
+    type: event.value_notification.scene_activation
+    property: sceneId
+    property_key:
+    endpoint: 0
+    command_class: 43
+    subtype: Endpoint 0
+    id: svart 7
+    value: 7
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: svart 3
+      sequence:
+      - service: switch.toggle
+        target:
+          entity_id: switch.arbetsbord
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: svart 1
+      sequence:
+      - service: light.toggle
+        target:
+          entity_id:
+          - light.hue_color_floor_1
+          - light.kok
+          - light.vardagsrum
+        data:
+          brightness_pct: 70
+          color_temp: 333
+    - conditions:
+      - condition: trigger
+        id: svart 5
+      sequence:
+      - service: light.toggle
+        target:
+          entity_id:
+          - light.hue_color_floor_1
+          - light.kok
+          - light.vardagsrum
+          - light.sovrummet
+        data:
+          brightness_pct: 50
+          effect: colorloop
+    - conditions:
+      - condition: trigger
+        id: svart 7
+      sequence:
+      - service: automation.toggle
+        target:
+          entity_id: automation.christmas_strip_led
+        data: {}
+      - service: light.toggle
+        target:
+          entity_id: light.hue_color_floor_1
+        data:
+          brightness_pct: 31
+    default: []
+  mode: single
+- id: '1635586763357'
+  alias: 'Light: Hall belysning & timer'
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_off
+    device_id: b59020770d9ac19273e623879226150c
+    entity_id: switch.hallampa
+    domain: switch
+    id: hall.off
+  - platform: device
+    type: turned_on
+    device_id: b59020770d9ac19273e623879226150c
+    entity_id: switch.hallampa
+    domain: switch
+    id: hall.on
+  - platform: event
+    event_type: timer.finished
+    id: hall.timer.end
+    event_data:
+      entity_id: timer.hallen
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: hall.on
+      sequence:
+      - service: timer.start
+        data:
+          duration: '0'
+        target:
+          entity_id: timer.hallen
+    - conditions:
+      - condition: trigger
+        id: hall.off
+      - condition: state
+        entity_id: input_boolean.belysning
+        state: 'off'
+      sequence:
+      - service: timer.cancel
+        target:
+          entity_id: timer.hallen
+        data: {}
+      - service: switch.turn_off
+        target:
+          entity_id: switch.hallampa
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: hall.timer.end
+      - condition: state
+        entity_id: input_boolean.belysning
+        state: 'off'
+      sequence:
+      - service: switch.turn_off
+        target:
+          entity_id: switch.hallampa
+        data: {}
+    default: []
+  mode: single
+- id: '1635590732004'
+  alias: 'Light: Förråd belysning & timer'
+  description: ''
+  trigger:
+  - type: not_opened
+    platform: device
+    device_id: f89e5019be07a86e0c630d674a455e6d
+    entity_id: binary_sensor.dorrsensor_forrad_access_control_window_door_is_open
+    domain: binary_sensor
+    id: frad.off
+  - type: opened
+    platform: device
+    device_id: f89e5019be07a86e0c630d674a455e6d
+    entity_id: binary_sensor.dorrsensor_forrad_access_control_window_door_is_open
+    domain: binary_sensor
+    id: frad.on
+  - platform: event
+    event_type: timer.finished
+    id: frad.finished
+    event_data:
+      entity_id: timer.forrad
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: frad.off
+      - condition: state
+        entity_id: input_boolean.belysning
+        state: 'off'
+      sequence:
+      - service: light.turn_off
+        target:
+          entity_id: light.forrad
+        data: {}
+      - service: timer.cancel
+        target:
+          entity_id: timer.forrad
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: frad.on
+      sequence:
+      - service: light.turn_on
+        target:
+          entity_id: light.forrad
+        data:
+          color_temp: 333
+          brightness_pct: 100
+      - service: timer.start
+        data:
+          duration: '0'
+        target:
+          entity_id: timer.forrad
+    - conditions:
+      - condition: trigger
+        id: frad.finished
+      - condition: state
+        entity_id: input_boolean.belysning
+        state: 'off'
+      sequence:
+      - service: light.turn_off
+        target:
+          entity_id: light.forrad
+        data: {}
+    default: []
+  mode: single
+- id: '1635596267227'
+  alias: 'SYS: Google Home'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.google_home
+    to: 'on'
+    id: g-on
+  - platform: state
+    entity_id: input_boolean.google_home
+    to: 'off'
+    id: g-off
+  - platform: event
+    event_type: timer.finished
+    id: g.timer.morgon
+    event_data:
+      entity_id: timer.sovrum
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: g-on
+      - condition: state
+        entity_id: input_boolean.google_on_off
+        state: 'off'
+      sequence:
+      - service: timer.start
+        data: {}
+        target:
+          entity_id: timer.sovrum
+      - service: light.turn_on
+        data:
+          brightness_pct: 10
+        target:
+          entity_id:
+          - light.bord
+          - light.sekretar
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 10
+          milliseconds: 0
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.rull_7_9
+    - conditions:
+      - condition: trigger
+        id: g-off
+      - condition: state
+        entity_id: input_boolean.google_on_off
+        state: 'off'
+      sequence:
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id:
+          - switch.arbetsbord
+          - switch.badrumskap
+          - switch.gangen
+          - switch.hallampa
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 10
+          milliseconds: 0
+      - service: automation.turn_off
+        data: {}
+        target:
+          entity_id: automation.christmas_strip_led
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id:
+          - light.lampgrupp_ovr
+          - light.lampgrupp_sovrum
+          - light.badrummet
+          - light.forrad
+          - light.hue_color_floor_1
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_grp_7_9
+    - conditions:
+      - condition: trigger
+        id: g.timer.morgon
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id: light.lampgrupp_sovrum
+    default: []
+  mode: single
+- id: '1635597184076'
+  alias: Sängvärme & timer
+  description: ''
+  trigger:
+  - platform: event
+    event_type: timer.finished
+    id: bed.off
+    event_data:
+      entity_id: timer.heating
+  - platform: time
+    at: '18:00'
+    id: bed.on
+  - platform: state
+    entity_id: input_boolean.google_home
+    id: google.goodnight
+    to: 'off'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: bed.off
+      sequence:
+      - service: switch.turn_off
+        target:
+          entity_id: switch.varmefilt
+    - conditions:
+      - condition: trigger
+        id: bed.on
+      sequence:
+      - service: switch.turn_on
+        target:
+          entity_id: switch.varmefilt
+    - conditions:
+      - condition: trigger
+        id: google.goodnight
+      sequence:
+      - service: timer.start
+        data:
+          duration: '0'
+        target:
+          entity_id: timer.heating
+    default: []
+  mode: single
+- id: '1635614367005'
+  alias: 'Light: Badrum belysning & timer'
+  description: ''
+  trigger:
+  - type: not_opened
+    platform: device
+    device_id: aec1f6ac931fbea6810bb13470a30f89
+    entity_id: binary_sensor.dorrsensor_bad_access_control_window_door_is_open
+    domain: binary_sensor
+    id: bad.closed
+  - type: opened
+    platform: device
+    device_id: aec1f6ac931fbea6810bb13470a30f89
+    entity_id: binary_sensor.dorrsensor_bad_access_control_window_door_is_open
+    domain: binary_sensor
+    id: bad.opened
+  - platform: event
+    event_type: timer.finished
+    id: bad.timeout
+    event_data:
+      entity_id: timer.badrum
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: bad.closed
+      - condition: state
+        entity_id: input_boolean.belysning
+        state: 'off'
+      sequence:
+      - service: switch.turn_off
+        target:
+          entity_id:
+          - switch.badrumskap
+        data: {}
+      - service: light.turn_off
+        target:
+          entity_id: light.badrummet
+        data: {}
+      - service: timer.cancel
+        target:
+          entity_id: timer.badrum
+        data: {}
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 1
+          milliseconds: 0
+      - service: switch.turn_off
+        target:
+          entity_id: switch.hallampa
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: bad.timeout
+      - condition: state
+        entity_id: input_boolean.belysning
+        state: 'off'
+      sequence:
+      - service: light.turn_off
+        target:
+          entity_id: light.badrummet
+        data: {}
+      - service: switch.turn_off
+        target:
+          entity_id:
+          - switch.badrumskap
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: bad.opened
+      - condition: state
+        entity_id: input_boolean.dag_natt
+        state: 'off'
+      sequence:
+      - service: light.turn_on
+        target:
+          entity_id: light.badrummet
+        data:
+          color_temp: 333
+          brightness_pct: 7
+      - service: timer.start
+        data:
+          duration: '0'
+        target:
+          entity_id: timer.badrum
+    - conditions:
+      - condition: trigger
+        id: bad.opened
+      sequence:
+      - service: light.turn_on
+        target:
+          entity_id: light.badrummet
+        data:
+          color_temp: 333
+          brightness_pct: 73
+      - service: switch.turn_on
+        target:
+          entity_id:
+          - switch.badrumskap
+          - switch.hallampa
+        data: {}
+      - service: timer.start
+        data:
+          duration: '0'
+        target:
+          entity_id: timer.badrum
+    default: []
+  mode: single
+- id: '1635689050079'
+  alias: 'Light: Lägenhet allmän belysning'
+  description: ''
+  trigger:
+  - platform: time
+    id: sun.sunrise
+    at: input_datetime.lagenhet_slack
+  - platform: time
+    id: sun.sunset
+    at: input_datetime.lagenhet_tand
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: sun.sunrise
+      sequence:
+      - service: light.turn_off
+        target:
+          entity_id:
+          - light.lampgrupp_ovr
+          - light.lampgrupp_sovrum
+        data:
+          transition: 10
+    - conditions:
+      - condition: trigger
+        id: sun.sunset
+      sequence:
+      - service: light.turn_on
+        target:
+          entity_id:
+          - light.lampgrupp_ovr
+        data:
+          color_temp: 333
+          transition: 10
+          brightness_pct: 60
+      - service: light.turn_on
+        target:
+          entity_id: light.lampgrupp_sovrum
+        data:
+          transition: 10
+          color_temp: 333
+          brightness_pct: 50
+    default: []
+  mode: single
+- id: '1635689948157'
+  alias: 'REMOTE: Panel vardagsrum'
+  description: ''
+  trigger:
+  - platform: device
+    device_id: b242e1c0aa7dc8f5bb65725384a798be
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '004'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 004
+    id: rull-1_6-up
+  - platform: device
+    device_id: b242e1c0aa7dc8f5bb65725384a798be
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: 008
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 008
+    id: rull-1_6-down
+  - platform: device
+    device_id: b242e1c0aa7dc8f5bb65725384a798be
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '004'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 004
+    value: 3
+    id: light-timer-manual
+  - platform: device
+    device_id: b242e1c0aa7dc8f5bb65725384a798be
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: 008
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 008
+    value: 3
+    id: light-timer-auto
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: rull-1_6-up
+      sequence:
+      - service: input_boolean.turn_off
+        target:
+          entity_id:
+          - input_boolean.rull_1_4
+          - input_boolean.rull_5_6
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: rull-1_6-down
+      sequence:
+      - service: input_boolean.turn_on
+        target:
+          entity_id:
+          - input_boolean.rull_1_4
+          - input_boolean.rull_5_6
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: light-timer-manual
+      sequence:
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.belysning
+    - conditions:
+      - condition: trigger
+        id: light-timer-auto
+      sequence:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.belysning
+    default: []
+  mode: single
+- id: '1635695253829'
+  alias: 'NOTIFY: Batteri-varning dörrar'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.dorrsensor_bad_low_battery_level
+    to: 'on'
+    id: door.bath
+  - platform: state
+    entity_id: binary_sensor.dorrsensor_forrad_low_battery_level
+    to: 'on'
+    id: door.forrad
+  - platform: state
+    entity_id: binary_sensor.dorrsensor_sovrum_low_battery_level
+    to: 'on'
+    id: door.sov
+  - platform: state
+    entity_id: binary_sensor.dorrsensor_vardagsrum_low_battery_level
+    to: 'on'
+    id: door.vardag
+  - platform: state
+    entity_id: binary_sensor.dorrsensor_kok_access_control_window_door_is_open
+    to: 'on'
+    id: door.kok
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: door.bath
+      sequence:
+      - service: notify.mx_acat_se
+        data:
+          message: Batteri dörr badrum behöver laddas!
+          title: Batteri dörr badrum behöver laddas!
+      - service: notify.persistent_notification
+        data:
+          message: notify.persistent_notification
+    - conditions:
+      - condition: trigger
+        id: door.forrad
+      sequence:
+      - service: notify.mx_acat_se
+        data:
+          message: Batteri dörr förråd behöver laddas!
+          title: Batteri dörr förråd behöver laddas!
+      - service: notify.persistent_notification
+        data:
+          message: Batteri dörr förråd behöver laddas!
+    - conditions:
+      - condition: trigger
+        id: door.kok
+      sequence:
+      - service: notify.mx_acat_se
+        data:
+          message: Batteri dörr kök behöver laddas!
+          title: Batteri dörr kök behöver laddas!
+      - service: notify.persistent_notification
+        data:
+          message: Batteri dörr kök behöver laddas!
+    - conditions:
+      - condition: trigger
+        id: door.sov
+      sequence:
+      - service: notify.mx_acat_se
+        data:
+          message: Batteri dörr sovrum behöver laddas!
+          title: Batteri dörr sovrum behöver laddas!
+      - service: notify.persistent_notification
+        data:
+          message: Batteri dörr sovrum behöver laddas!
+    - conditions:
+      - condition: trigger
+        id: door.vardag
+      sequence:
+      - service: notify.mx_acat_se
+        data:
+          message: Batteri dörr vardagsrum behöver laddas!
+          title: Batteri dörr vardagsrum behöver laddas!
+      - service: notify.persistent_notification
+        data:
+          message: Batteri dörr vardagsrum behöver laddas!
+    default: []
+  mode: single
+- id: '1635696554698'
+  alias: 'NOTIFY: Batteri varning element'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.popp_wireless_thermostatic_valve_trv_low_battery_level
+    to: 'on'
+    id: element.1
+  - platform: state
+    to: 'on'
+    id: element.2
+    entity_id: binary_sensor.popp_wireless_thermostatic_valve_trv_low_battery_level_2
+  - platform: state
+    entity_id: binary_sensor.popp_wireless_thermostatic_valve_trv_low_battery_level_3
+    to: 'on'
+    id: element.3
+  - platform: state
+    entity_id: binary_sensor.popp_wireless_thermostatic_valve_trv_low_battery_level_4
+    to: 'on'
+    id: element.4
+  - platform: state
+    entity_id: binary_sensor.popp_wireless_thermostatic_valve_trv_low_battery_level_5
+    to: 'on'
+    id: element.6
+  - platform: state
+    entity_id: binary_sensor.popp_wireless_thermostatic_valve_trv_low_battery_level_6
+    to: 'on'
+    id: element.7
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: element.1
+      sequence:
+      - service: notify.mx_acat_se
+        data:
+          message: Batteri element 1 behöver bytas.
+          title: Batteri element 1 behöver bytas.
+      - service: notify.persistent_notification
+        data:
+          message: Batteri element 1 behöver bytas.
+    - conditions:
+      - condition: trigger
+        id: element.2
+      sequence:
+      - service: notify.mx_acat_se
+        data:
+          message: Batteri element 2 behöver bytas.
+          title: Batteri element 2 behöver bytas.
+      - service: notify.persistent_notification
+        data:
+          message: Batteri element 2 behöver bytas.
+    - conditions:
+      - condition: trigger
+        id: element.3
+      sequence:
+      - service: notify.mx_acat_se
+        data:
+          message: Batteri element 3 behöver bytas.
+          title: Batteri element 3 behöver bytas.
+      - service: notify.persistent_notification
+        data:
+          message: Batteri element 3 behöver bytas.
+    - conditions:
+      - condition: trigger
+        id: element.4
+      sequence:
+      - service: notify.mx_acat_se
+        data:
+          message: Batteri element 4 behöver bytas.
+          title: Batteri element 4 behöver bytas.
+      - service: notify.persistent_notification
+        data:
+          message: Batteri element 4 behöver bytas.
+    - conditions:
+      - condition: trigger
+        id: element.6
+      sequence:
+      - service: notify.mx_acat_se
+        data:
+          message: Batteri element 6 behöver bytas.
+          title: Batteri element 6 behöver bytas.
+      - service: notify.persistent_notification
+        data:
+          message: Batteri element 6 behöver bytas.
+    - conditions:
+      - condition: trigger
+        id: element.7
+      sequence:
+      - service: notify.mx_acat_se
+        data:
+          message: Batteri element 7 behöver bytas.
+          title: Batteri element 7 behöver bytas.
+      - service: notify.persistent_notification
+        data:
+          message: Batteri element 7 behöver bytas.
+    default: []
+  mode: single
+- id: '1635709599161'
+  alias: 'Light: Styrning belysning spärr timer'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.belysning
+    id: block.off
+    to: 'off'
+  - platform: state
+    entity_id: input_boolean.belysning
+    id: block.on
+    to: 'on'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: block.off
+      sequence:
+      - service: light.turn_off
+        target:
+          entity_id:
+          - light.badrummet
+          - light.forrad
+        data: {}
+      - service: switch.turn_off
+        target:
+          entity_id:
+          - switch.hallampa
+          - switch.badrumskap
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: block.on
+      sequence:
+      - service: light.turn_on
+        target:
+          entity_id:
+          - light.badrummet
+          - light.forrad
+        data:
+          color_temp: 333
+          brightness_pct: 100
+      - service: switch.turn_on
+        target:
+          entity_id:
+          - switch.hallampa
+          - switch.badrumskap
+        data: {}
+    default: []
+  mode: single
+- id: '1635710165227'
+  alias: 'BLIND: Rullgardiner 7-9 styrning'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.rull_7_9
+    id: rull.7.9.ner
+    to: 'on'
+  - platform: time
+    at: input_datetime.sovrum_rull_9_upp
+    id: rull.7.9.timer
+  - platform: state
+    entity_id: input_boolean.rull_7_9
+    id: rull.7.8.9.upp
+    to: 'off'
+  - platform: device
+    device_id: fda51218d52fdd7bac944caa3543a6e5
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '004'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 004
+    value: 3
+    id: cover-up-stop
+  - platform: device
+    device_id: fda51218d52fdd7bac944caa3543a6e5
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: 008
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 008
+    value: 3
+    id: cover-down-stop
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: rull.7.9.timer
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 50
+        target:
+          entity_id:
+          - cover.rull_grp_7_9
+    - conditions:
+      - condition: trigger
+        id: rull.7.8.9.upp
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id: cover.rull_grp_7_9
+    - conditions:
+      - condition: trigger
+        id: rull.7.9.ner
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id:
+          - cover.rull_7
+          - cover.rull_9_2
+      - condition: state
+        entity_id: binary_sensor.dorrsensor_sovrum_access_control_window_door_is_open
+        state: 'off'
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_8_2
+    - conditions:
+      - condition: trigger
+        id: cover-up-stop
+      sequence:
+      - service: cover.stop_cover
+        data: {}
+        target:
+          entity_id: cover.rull_grp_7_9
+    - conditions:
+      - condition: trigger
+        id: cover-down-stop
+      sequence:
+      - service: cover.stop_cover
+        data: {}
+        target:
+          entity_id: cover.rull_sovrum
+    default: []
+  mode: single
+- id: '1635711218283'
+  alias: 'BLIND: Rullgardiner 1-4 styrning'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.rull_1_4
+    id: rull1.2.3.4.upp
+    to: 'off'
+  - platform: state
+    id: rull1.2.3.4.ner
+    to: 'on'
+    entity_id: input_boolean.rull_1_4
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: rull1.2.3.4.upp
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id: cover.rull_grp_1_4
+    - conditions:
+      - condition: trigger
+        id: rull1.2.3.4.ner
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id:
+          - cover.rull_2
+          - cover.rull_3
+          - cover.rull_4
+      - condition: state
+        entity_id: binary_sensor.dorrsensor_kok_access_control_window_door_is_open
+        state: 'off'
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_1
+    default: []
+  mode: single
+- id: '1635750836926'
+  alias: 'BLIND: Rullgardiner 5-6 styrning'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.rull_5_6
+    id: rull.5.6.upp
+    to: 'off'
+  - platform: state
+    entity_id: input_boolean.rull_5_6
+    id: rull.5.6.ner
+    to: 'on'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: rull.5.6.upp
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id: cover.rull_grp_5_6
+    - conditions:
+      - condition: trigger
+        id: rull.5.6.ner
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_5
+      - condition: state
+        entity_id: binary_sensor.dorrsensor_vardagsrum_access_control_window_door_is_open
+        state: 'off'
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_6
+    default: []
+  mode: single
+- id: '1635778966310'
+  alias: 'Light: Geofence: switch lights.'
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: proximity.home
+    id: leaving-home
+    above: '0.5'
+  - platform: numeric_state
+    entity_id: proximity.home
+    below: '0.5'
+    id: approaching-home
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: leaving-home
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id:
+          - light.lampgrupp_ovr
+          - light.lampgrupp_sovrum
+      - service: notify.mobile_app_sm_g988b
+        data:
+          message: Belysning släckt.
+    - conditions:
+      - condition: trigger
+        id: approaching-home
+      sequence:
+      - service: light.turn_on
+        data:
+          color_temp: 333
+          brightness: 50
+        target:
+          entity_id:
+          - light.lampgrupp_sovrum
+          - light.lampgrupp_ovr
+      - service: notify.mobile_app_sm_g988b
+        data:
+          message: Belysning tänd.
+    default: []
+  mode: single
+- id: '1636116028430'
+  alias: 'BLIND: Rullgardiner 1-9  timer'
+  description: ''
+  trigger:
+  - platform: time
+    id: rull1.2..6.timer
+    at: input_datetime.vardags_rull_1_6_upp
+  - platform: sun
+    event: sunset
+    id: rull1-9.ner
+    offset: 00:30
+  - platform: time
+    at: 09:00
+    id: rull1-9.upp
+  - type: not_opened
+    platform: device
+    device_id: c14a9d08240820703aa8272b45a58a6b
+    entity_id: binary_sensor.dorrsensor_sovrum_access_control_window_door_is_open
+    domain: binary_sensor
+    id: sovrumdorr-closes
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: rull1.2..6.timer
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id: cover.rull_morgon
+    - conditions:
+      - condition: trigger
+        id: rull1-9.ner
+      sequence:
+      - service: input_boolean.turn_on
+        target:
+          entity_id:
+          - input_boolean.rull_1_4
+          - input_boolean.rull_5_6
+          - input_boolean.rull_7_9
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: rull1-9.upp
+      sequence:
+      - service: input_boolean.turn_off
+        target:
+          entity_id:
+          - input_boolean.rull_1_4
+          - input_boolean.rull_5_6
+          - input_boolean.rull_7_9
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: sovrumdorr-closes
+      - condition: state
+        entity_id: input_boolean.rull_7_9
+        state: 'on'
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_8_2
+    default: []
+  mode: single
+- id: '1637616027105'
+  alias: 'Light: Belysning släck-timer'
+  description: ''
+  trigger:
+  - platform: time
+    at: input_datetime.light_slack_sov_kok
+  condition: []
+  action:
+  - service: light.turn_off
+    target:
+      entity_id:
+      - light.kok
+      - light.sovrummet
+    data:
+      transition: 30
+  mode: single
+- id: '1638685645995'
+  alias: 'SYS: Reset_boolean'
+  description: ''
+  trigger:
+  - platform: time
+    at: '10:00'
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.google_on_off
+    data: {}
+  - service: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.google_home
+    data: {}
+  - service: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.google_on_off
+    data: {}
+  mode: single
+- id: '1640077456888'
+  alias: 'RADIATOR: Element - MAX'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.element_max
+    from: 'off'
+    to: 'on'
+    id: element-max-on
+  - platform: state
+    entity_id: input_boolean.element_max
+    id: element-max-off
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: element-max-on
+      sequence:
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.element_min
+        data: {}
+      - service: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.elements
+        data: {}
+      - service: climate.set_temperature
+        target:
+          entity_id:
+          - climate.popp_wireless_thermostatic_valve_trv
+          - climate.popp_wireless_thermostatic_valve_trv_2
+          - climate.popp_wireless_thermostatic_valve_trv_3
+          - climate.popp_wireless_thermostatic_valve_trv_4
+          - climate.popp_wireless_thermostatic_valve_trv_5
+          - climate.popp_wireless_thermostatic_valve_trv_6
+        data:
+          temperature: 28
+    - conditions:
+      - condition: trigger
+        id: element-max-off
+      sequence:
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.elements
+        data: {}
+      - service: climate.set_temperature
+        target:
+          entity_id:
+          - climate.popp_wireless_thermostatic_valve_trv
+          - climate.popp_wireless_thermostatic_valve_trv_2
+          - climate.popp_wireless_thermostatic_valve_trv_3
+          - climate.popp_wireless_thermostatic_valve_trv_4
+          - climate.popp_wireless_thermostatic_valve_trv_5
+          - climate.popp_wireless_thermostatic_valve_trv_6
+        data:
+          temperature: 23
+    default: []
+  mode: single
+- id: '1640100227641'
+  alias: 'RADIATOR: Element - MIN'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.element_min
+    from: 'off'
+    to: 'on'
+    id: element-min-on
+  - platform: state
+    entity_id: input_boolean.element_min
+    id: element-min-off
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: element-min-on
+      sequence:
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.element_max
+        data: {}
+      - service: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.elements
+        data: {}
+      - service: climate.set_temperature
+        data:
+          temperature: 7
+        target:
+          entity_id:
+          - climate.popp_wireless_thermostatic_valve_trv
+          - climate.popp_wireless_thermostatic_valve_trv_2
+          - climate.popp_wireless_thermostatic_valve_trv_3
+          - climate.popp_wireless_thermostatic_valve_trv_4
+          - climate.popp_wireless_thermostatic_valve_trv_5
+          - climate.popp_wireless_thermostatic_valve_trv_6
+    - conditions:
+      - condition: trigger
+        id: element-min-off
+      sequence:
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.elements
+        data: {}
+      - service: climate.set_temperature
+        data:
+          temperature: 25
+        target:
+          entity_id:
+          - climate.popp_wireless_thermostatic_valve_trv_5
+      - service: climate.set_temperature
+        data:
+          temperature: 27
+        target:
+          entity_id: climate.popp_wireless_thermostatic_valve_trv_6
+      - service: climate.set_temperature
+        data:
+          temperature: 24
+        target:
+          entity_id:
+          - climate.popp_wireless_thermostatic_valve_trv_2
+          - climate.popp_wireless_thermostatic_valve_trv
+      - service: climate.set_temperature
+        data:
+          temperature: 26
+        target:
+          entity_id:
+          - climate.popp_wireless_thermostatic_valve_trv_4
+          - climate.popp_wireless_thermostatic_valve_trv_3
+    default: []
+  mode: single
+- id: '1640451021439'
+  alias: 'Light: run vacation lights'
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: '0'
+    id: sundown
+  - platform: sun
+    event: sunrise
+    offset: '0'
+    id: sunup
+  - platform: state
+    entity_id: input_boolean.vacation_mode
+    id: cancel
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: sundown
+      - condition: state
+        entity_id: input_boolean.vacation_mode
+        state: 'on'
+      sequence:
+      - service: script.turn_on
+        target:
+          entity_id: script.randomize_vacation_lights
+        data: {}
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: trigger
+          id: sunup
+        - condition: trigger
+          id: cancel
+      sequence:
+      - service: script.turn_off
+        target:
+          entity_id: script.randomize_vacation_lights
+        data: {}
+    default: []
+  mode: single
+- id: '1640618127850'
+  alias: 'SYS: DAG<-->NATT'
+  description: ''
+  trigger:
+  - platform: time
+    at: input_datetime.dag
+    id: DAG
+  - platform: time
+    id: NATT
+    at: input_datetime.night
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: DAG
+      sequence:
+      - service: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.dag_natt
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: NATT
+      sequence:
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.dag_natt
+        data: {}
+    default: []
+  mode: single
+- id: '1641927964232'
+  alias: 'Light: Christmas strip led'
+  description: Rotating color every second
+  trigger:
+  - hours: '*'
+    minutes: '*'
+    platform: time_pattern
+    seconds: /5
+  condition: []
+  action:
+  - service: script.random_lights
+    data:
+      entity: light.hue_color_floor_1
+  mode: single
+- id: '1646294684873'
+  alias: 'Light: Matbord motion timer'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.kok_sensor_home_security_motion_detection
+    to: 'on'
+    id: matbord_sensor_on
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.matbord
+    id: matbord_finished
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: matbord_sensor_on
+      - condition: time
+        after: input_datetime.matbord_on
+        before: input_datetime.matbord_off
+      sequence:
+      - service: timer.start
+        data: {}
+        target:
+          entity_id: timer.matbord
+      - service: light.turn_on
+        data:
+          transition: 3
+          color_temp: 333
+          brightness_pct: 60
+        target:
+          entity_id: light.kok
+    - conditions:
+      - condition: trigger
+        id: matbord_finished
+      sequence:
+      - service: light.turn_off
+        data:
+          transition: 2
+        target:
+          entity_id: light.kok
+    default: []
+  mode: single
+- id: '1647502143323'
+  alias: 'BLIND: Solskydd rull 4+5'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.solskydd
+    from: 'off'
+    to: 'on'
+    id: sol-on
+  - platform: state
+    entity_id: input_boolean.solskydd
+    id: sol-off
+    to: 'off'
+  - platform: time
+    at: '14:00:00'
+    id: sol-off-auto
+  - platform: time
+    at: 09:30:00
+    id: sol-4->5
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: sol-on
+      - condition: time
+        before: 09:00:00
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 65
+        target:
+          entity_id:
+          - cover.rull_3
+          - cover.rull_4
+    - conditions:
+      - condition: trigger
+        id: sol-off
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id:
+          - cover.rull_4
+          - cover.rull_5
+          - cover.rull_3
+          - cover.rull_6
+    - conditions:
+      - condition: trigger
+        id: sol-on
+      - condition: time
+        after: 09:30:00
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 65
+        target:
+          entity_id:
+          - cover.rull_5
+          - cover.rull_6
+    - conditions:
+      - condition: trigger
+        id: sol-off-auto
+      - condition: state
+        entity_id: input_boolean.solskydd
+        state: 'on'
+      sequence:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.solskydd
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id:
+          - cover.rull_3
+          - cover.rull_4
+          - cover.rull_5
+          - cover.rull_6
+    - conditions:
+      - condition: trigger
+        id: sol-4->5
+      - condition: state
+        entity_id: input_boolean.solskydd
+        state: 'on'
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id:
+          - cover.rull_3
+          - cover.rull_4
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 15
+          milliseconds: 0
+      - service: cover.set_cover_position
+        data:
+          position: 65
+        target:
+          entity_id:
+          - cover.rull_5
+          - cover.rull_6
+    default: []
+  mode: single
+- id: '1647894955837'
+  alias: 'Light: Dim One Light One Step On Press'
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 7e2bfe979521ba3ea483dfa55ec682ff
+    domain: zwave_js
+    type: event.value_notification.scene_activation
+    property: sceneId
+    property_key:
+    endpoint: 0
+    command_class: 43
+    subtype: Endpoint 0
+    id: dim-up
+    value: 1
+  - platform: device
+    device_id: 7e2bfe979521ba3ea483dfa55ec682ff
+    domain: zwave_js
+    type: event.value_notification.scene_activation
+    property: sceneId
+    property_key:
+    endpoint: 0
+    command_class: 43
+    subtype: Endpoint 0
+    value: 5
+    id: dim-down
+  - platform: device
+    device_id: 7e2bfe979521ba3ea483dfa55ec682ff
+    domain: zwave_js
+    type: event.value_notification.scene_activation
+    property: sceneId
+    property_key:
+    endpoint: 0
+    command_class: 43
+    subtype: Endpoint 0
+    value: 2
+    id: dim-on
+  - platform: device
+    device_id: 7e2bfe979521ba3ea483dfa55ec682ff
+    domain: zwave_js
+    type: event.value_notification.scene_activation
+    property: sceneId
+    property_key:
+    endpoint: 0
+    command_class: 43
+    subtype: Endpoint 0
+    value: 6
+    id: dim-off
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: dim-up
+      sequence:
+      - service: light.turn_on
+        data:
+          brightness_step: 10
+        target:
+          entity_id: light.testdimmer
+    - conditions:
+      - condition: trigger
+        id: dim-down
+      sequence:
+      - service: light.turn_on
+        data:
+          brightness_step: -10
+        target:
+          entity_id: light.testdimmer
+    - conditions:
+      - condition: trigger
+        id: dim-on
+      sequence:
+      - service: light.turn_on
+        data:
+          brightness_pct: 100
+        target:
+          entity_id: light.testdimmer
+    - conditions:
+      - condition: trigger
+        id: dim-off
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id: light.testdimmer
+    default: []
+  mode: single
+- id: '1647933127602'
+  alias: 'Light: S - Dim One Light by step value Until Release'
+  description: ''
+  trigger:
+  - platform: device
+    device_id: fda51218d52fdd7bac944caa3543a6e5
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '005'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 005
+    value: 2
+    id: dim-down
+  - platform: device
+    device_id: fda51218d52fdd7bac944caa3543a6e5
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '001'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 001
+    value: 2
+    id: dim-up
+  - platform: device
+    device_id: fda51218d52fdd7bac944caa3543a6e5
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '001'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 001
+    value: 1
+    id: dim-up-released
+  - platform: device
+    device_id: fda51218d52fdd7bac944caa3543a6e5
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '005'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 005
+    value: 1
+    id: dim-down-released
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: dim-up
+      sequence:
+      - repeat:
+          while:
+          - condition: trigger
+            id: dim-up
+          sequence:
+          - service: light.turn_on
+            data:
+              brightness_step_pct: 3
+            target:
+              entity_id:
+              - light.lampgrupp_sovrum
+          - delay:
+              hours: 0
+              minutes: 0
+              seconds: 0
+              milliseconds: 500
+    - conditions:
+      - condition: trigger
+        id: dim-down
+      sequence:
+      - repeat:
+          while:
+          - condition: trigger
+            id: dim-down
+          sequence:
+          - service: light.turn_on
+            data:
+              brightness_step_pct: -3
+            target:
+              entity_id:
+              - light.lampgrupp_sovrum
+          - delay:
+              hours: 0
+              minutes: 0
+              seconds: 0
+              milliseconds: 500
+    default: []
+  mode: restart
+- id: '1647959480381'
+  alias: 'Light: V - Dim One Light by step value Until Release'
+  description: ''
+  trigger:
+  - platform: device
+    device_id: b242e1c0aa7dc8f5bb65725384a798be
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '001'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 001
+    id: dim-up
+    value: 2
+  - platform: device
+    device_id: b242e1c0aa7dc8f5bb65725384a798be
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '005'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 005
+    id: dim-down
+    value: 2
+  - platform: device
+    device_id: b242e1c0aa7dc8f5bb65725384a798be
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '001'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 001
+    id: dim-up-released
+    value: 1
+  - platform: device
+    device_id: b242e1c0aa7dc8f5bb65725384a798be
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '005'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 005
+    id: dim-down-released
+    value: 1
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: dim-up
+      sequence:
+      - repeat:
+          while:
+          - condition: trigger
+            id: dim-up
+          sequence:
+          - service: light.turn_on
+            data:
+              brightness_step_pct: 5
+              color_temp: 333
+            target:
+              entity_id:
+              - light.lampgrupp_ovr
+          - delay:
+              hours: 0
+              minutes: 0
+              seconds: 0
+              milliseconds: 500
+    - conditions:
+      - condition: trigger
+        id: dim-down
+      sequence:
+      - repeat:
+          while:
+          - condition: trigger
+            id: dim-down
+          sequence:
+          - service: light.turn_on
+            data:
+              brightness_step_pct: -5
+              color_temp: 333
+            target:
+              entity_id:
+              - light.lampgrupp_ovr
+          - delay:
+              hours: 0
+              minutes: 0
+              seconds: 0
+              milliseconds: 500
+    default: []
+  mode: restart
+- id: '1647977328240'
+  alias: 'SYS: Presense - First Person Arrives Home'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.somebody_home
+    from: note_home
+    to: home
+    id: home
+  - platform: state
+    entity_id: group.somebody_home
+    from: home
+    to: not_home
+    id: not-home
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: home
+      sequence:
+      - service: light.turn_on
+        data:
+          color_temp: 333
+          brightness: 50
+        target:
+          entity_id: light.lampgrupp_ovr
+    - conditions:
+      - condition: trigger
+        id: not-home
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id:
+          - light.lampgrupp_ovr
+          - light.lampgrupp_sovrum
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id:
+          - switch.arbetsbord
+          - switch.gangen
+          - switch.hallampa
+          - switch.sang
+    default: []
+  mode: single
+- id: '1648275457307'
+  alias: 'BLIND: Styrning av alla rullgardiner'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_button.rull1up
+    id: rull1up
+  - platform: state
+    entity_id: input_button.rull1stop
+    id: rull1stop
+  - platform: state
+    entity_id: input_button.rull1down
+    id: rull1down
+  - platform: state
+    entity_id: input_button.rull2up
+    id: rull2up
+  - platform: state
+    entity_id: input_button.rull2stop
+    id: rull2stop
+  - platform: state
+    entity_id: input_button.rull2down
+    id: rull2down
+  - platform: state
+    entity_id: input_button.rull3up
+    id: rull3up
+  - platform: state
+    entity_id: input_button.rull3stop
+    id: rull3stop
+  - platform: state
+    entity_id: input_button.rull3down
+    id: rull3down
+  - platform: state
+    entity_id: input_button.rull4up
+    id: rull4up
+  - platform: state
+    entity_id: input_button.rull4stop
+    id: rull4stop
+  - platform: state
+    entity_id: input_button.rull4down
+    id: rull4down
+  - platform: state
+    entity_id: input_button.rull5up
+    id: rull5up
+  - platform: state
+    entity_id: input_button.rull5stop
+    id: rull5stop
+  - platform: state
+    entity_id: input_button.rull5down
+    id: rull5down
+  - platform: state
+    entity_id: input_button.rull6up
+    id: rull6up
+  - platform: state
+    entity_id: input_button.rull6stop
+    id: rull6stop
+  - platform: state
+    entity_id: input_button.rull6down
+    id: rull6down
+  - platform: state
+    entity_id: input_button.rull7up
+    id: rull7up
+  - platform: state
+    entity_id: input_button.rull7stop
+    id: rull7stop
+  - platform: state
+    entity_id: input_button.rull7down
+    id: rull7down
+  - platform: state
+    entity_id: input_button.rull8up
+    id: rull8up
+  - platform: state
+    entity_id: input_button.rull8stop
+    id: rull8stop
+  - platform: state
+    entity_id: input_button.rull8down
+    id: rull8down
+  - platform: state
+    entity_id: input_button.rull9stop
+    id: rull9stop
+  - platform: state
+    entity_id: input_button.rull9down
+    id: rull9down
+  - platform: state
+    entity_id: input_button.rull9up
+    id: rull9up
+  - platform: state
+    entity_id: input_button.rullgrp14up
+    id: rullgrp14up
+  - platform: state
+    entity_id: input_button.rullgrp14stop
+    id: rullgrp14stop
+  - platform: state
+    entity_id: input_button.rullgrp14down
+    id: rullgrp14down
+  - platform: state
+    entity_id: input_button.rullgrp56up
+    id: rullgrp56up
+  - platform: state
+    entity_id: input_button.rullgrp56stop
+    id: rullgrp56stop
+  - platform: state
+    entity_id: input_button.rullgrp56down
+    id: rullgrp56down
+  - platform: state
+    entity_id: input_button.rullgrp79up
+    id: rullgrp79up
+  - platform: state
+    entity_id: input_button.rullgrp79stop
+    id: rullgrp79stop
+  - platform: state
+    entity_id: input_button.rullgrp79down
+    id: rullgrp79down
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: rull1up
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id: cover.rull_1
+    - conditions:
+      - condition: trigger
+        id: rull1stop
+      sequence:
+      - service: cover.stop_cover
+        data: {}
+        target:
+          entity_id: cover.rull_1
+    - conditions:
+      - condition: trigger
+        id: rull1down
+      - type: is_not_open
+        condition: device
+        device_id: 9df83935863fe95c1cc3871fa9ff16f6
+        entity_id: binary_sensor.dorrsensor_kok_access_control_window_door_is_open
+        domain: binary_sensor
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_1
+    - conditions:
+      - condition: trigger
+        id: rull2up
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id: cover.rull_2
+    - conditions:
+      - condition: trigger
+        id: rull2stop
+      sequence:
+      - service: cover.stop_cover
+        data: {}
+        target:
+          entity_id: cover.rull_2
+    - conditions:
+      - condition: trigger
+        id: rull2down
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_2
+    - conditions:
+      - condition: trigger
+        id: rull3up
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id: cover.rull_3
+    - conditions:
+      - condition: trigger
+        id: rull3stop
+      sequence:
+      - service: cover.stop_cover
+        data: {}
+        target:
+          entity_id: cover.rull_3
+    - conditions:
+      - condition: trigger
+        id: rull3down
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_3
+    - conditions:
+      - condition: trigger
+        id: rull4up
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id: cover.rull_4
+    - conditions:
+      - condition: trigger
+        id: rull4stop
+      sequence:
+      - service: cover.stop_cover
+        data: {}
+        target:
+          entity_id: cover.rull_4
+    - conditions:
+      - condition: trigger
+        id: rull4down
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_4
+    - conditions:
+      - condition: trigger
+        id: rull5up
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id: cover.rull_5
+    - conditions:
+      - condition: trigger
+        id: rull5stop
+      sequence:
+      - service: cover.stop_cover
+        data: {}
+        target:
+          entity_id: cover.rull_5
+    - conditions:
+      - condition: trigger
+        id: rull5down
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_5
+    - conditions:
+      - condition: trigger
+        id: rull6up
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id: cover.rull_6
+    - conditions:
+      - condition: trigger
+        id: rull6stop
+      sequence:
+      - service: cover.stop_cover
+        data: {}
+        target:
+          entity_id: cover.rull_6
+    - conditions:
+      - condition: trigger
+        id: rull6down
+      - type: is_not_open
+        condition: device
+        device_id: de7ccbe0ef917d9d9b987dd9e5756b22
+        entity_id: binary_sensor.dorrsensor_vardagsrum_access_control_window_door_is_open
+        domain: binary_sensor
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_6
+    - conditions:
+      - condition: trigger
+        id: rull7up
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id: cover.rull_7
+    - conditions:
+      - condition: trigger
+        id: rull7stop
+      sequence:
+      - service: cover.stop_cover
+        data: {}
+        target:
+          entity_id: cover.rull_7
+    - conditions:
+      - condition: trigger
+        id: rull7down
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_7
+    - conditions:
+      - condition: trigger
+        id: rull8up
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id: cover.rull_8_2
+    - conditions:
+      - condition: trigger
+        id: rull8stop
+      sequence:
+      - service: cover.stop_cover
+        data: {}
+        target:
+          entity_id: cover.rull_8_2
+    - conditions:
+      - condition: trigger
+        id: rull8down
+      - type: is_not_open
+        condition: device
+        device_id: c14a9d08240820703aa8272b45a58a6b
+        entity_id: binary_sensor.dorrsensor_sovrum_access_control_window_door_is_open
+        domain: binary_sensor
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_8_2
+    - conditions:
+      - condition: trigger
+        id: rull9up
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id: cover.rull_9_2
+    - conditions:
+      - condition: trigger
+        id: rull9stop
+      sequence:
+      - service: cover.stop_cover
+        data: {}
+        target:
+          entity_id: cover.rull_9_2
+    - conditions:
+      - condition: trigger
+        id: rull9down
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_9_2
+    - conditions:
+      - condition: trigger
+        id: rullgrp14up
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id: cover.rull_grp_1_4
+    - conditions:
+      - condition: trigger
+        id: rullgrp14stop
+      sequence:
+      - service: cover.stop_cover
+        data: {}
+        target:
+          entity_id: cover.rull_grp_1_4
+    - conditions:
+      - condition: trigger
+        id: rullgrp14down
+      - type: is_not_open
+        condition: device
+        device_id: 9df83935863fe95c1cc3871fa9ff16f6
+        entity_id: binary_sensor.dorrsensor_kok_access_control_window_door_is_open
+        domain: binary_sensor
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_grp_1_4
+    - conditions:
+      - condition: trigger
+        id: rullgrp56up
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id: cover.rull_grp_5_6
+    - conditions:
+      - condition: trigger
+        id: rullgrp56stop
+      sequence:
+      - service: cover.stop_cover
+        data: {}
+        target:
+          entity_id: cover.rull_grp_5_6
+    - conditions:
+      - condition: trigger
+        id: rullgrp56down
+      - type: is_not_open
+        condition: device
+        device_id: de7ccbe0ef917d9d9b987dd9e5756b22
+        entity_id: binary_sensor.dorrsensor_vardagsrum_access_control_window_door_is_open
+        domain: binary_sensor
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_grp_5_6
+    - conditions:
+      - condition: trigger
+        id: rullgrp79up
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 100
+        target:
+          entity_id: cover.rull_grp_7_9
+    - conditions:
+      - condition: trigger
+        id: rullgrp79stop
+      sequence:
+      - service: cover.stop_cover
+        data: {}
+        target:
+          entity_id: cover.rull_grp_7_9
+    - conditions:
+      - condition: trigger
+        id: rullgrp79down
+      - type: is_not_open
+        condition: device
+        device_id: c14a9d08240820703aa8272b45a58a6b
+        entity_id: binary_sensor.dorrsensor_sovrum_access_control_window_door_is_open
+        domain: binary_sensor
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_grp_7_9
+    default: []
+  mode: single
+- id: '1648393211360'
+  alias: 'RADIO: Turn on Radio'
+  description: ''
+  trigger:
+  - platform: time
+    at: input_datetime.radio_on
+  condition: []
+  action:
+  - service: media_player.turn_on
+    data: {}
+    target:
+      entity_id: media_player.revo
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: media_player.volume_set
+    data:
+      volume_level: 0.2
+    target:
+      entity_id: media_player.revo
+  mode: single
+- id: '1648476432387'
+  alias: Low battery level detection & notification for all battery sensors
+  description: ''
+  use_blueprint:
+    path: sbyx/low-battery-level-detection-notification-for-all-battery-sensors.yaml
+    input:
+      actions:
+      - device_id: 9df83935863fe95c1cc3871fa9ff16f6
+        domain: zwave_js
+        type: set_value
+      - device_id: f89e5019be07a86e0c630d674a455e6d
+        domain: zwave_js
+        type: set_value
+- id: '1648663756045'
+  alias: 'SYS: Github Push'
+  description: ''
+  trigger:
+  - platform: time
+    at: 02:15:00
+  condition: []
+  action:
+  - service: shell_command.pushupdates_to_github
+    data: {}
+  mode: single

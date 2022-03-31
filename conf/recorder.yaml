@@ -1,0 +1,2 @@
+  db_url: !secret mariadb_url
+  commit_interval: 30

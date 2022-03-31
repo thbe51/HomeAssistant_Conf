@@ -1,0 +1,7 @@
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.30.33.0/24
+  ip_ban_enabled: false
+  login_attempts_threshold: 3
+#  ssl_certificate: /ssl/fullchain.pem
+#  ssl_key: /ssl/privkey.pem

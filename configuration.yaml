@@ -1,0 +1,55 @@
+homeassistant: !include conf/homeassistant.yaml
+default_config:
+###############################################################################
+automation: !include automations.yaml
+cloud: !include conf/cloud.yaml
+#config
+#counter:
+#dhcp:
+#energy:
+frontend: !include frontend.yaml
+history: !include conf/history.yaml
+#image:
+input_boolean: !include_dir_named input_boolean/
+#input_button:
+input_datetime: !include_dir_named input_datetime/
+#input_number
+#input_select:
+#input_text
+#logbook:
+#map:
+#media_source:
+#mobile_app:
+#my:
+#network:
+#person:
+#scene:
+script: !include scripts.yaml
+#ssdp:
+#stream:
+#sun:
+#system_health:
+#tag:
+timer: !include_dir_merge_named timer/
+#usb:
+#webhooks:
+#zeroconf:
+#zone:
+###############################################################################
+# Other stuff
+cover: !include conf/cover.yaml
+discovery: !include conf/discovery.yaml
+google: !include conf/google.yaml
+group: !include_dir_merge_named group/
+http: !include conf/http.yaml
+influxdb: !include conf/influxdb.yaml
+light: !include conf/light_group.yaml
+logger: !include conf/logger.yaml
+lovelace: !include lovelace.yaml
+media_player: !include conf/media_player.yaml
+netatmo: !include conf/netatmo.yaml
+notify: !include_dir_merge_list notify
+recorder: !include conf/recorder.yaml
+sensor: !include conf/sensor.yaml
+shell_command: !include conf/shell_command.yaml
+tts: !include conf/tts.yaml

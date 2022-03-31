@@ -1,0 +1,45 @@
+randomize_vacation_lights:
+  alias: improved_randomize vacation lights
+  sequence:
+  - repeat:
+      until:
+      - condition: state
+        entity_id: sun.sun
+        state: above_horizon
+      sequence:
+      - service: notify.mobile_app_sm_988b
+        data:
+          message: Running Vacation Lights
+      - service: homeassistant.turn_on
+        data:
+          entity_id: '{{ expand(''group.vacation_lights'') | selectattr(''state'',
+            ''eq'', ''off'') | map(attribute=''entity_id'') | list | random }}'
+      - delay:
+          minutes: '{{ range(1,3) | random | int }}'
+      - service: '{% set service = [''homeassistant.turn_on'', ''homeassisant.turn_off''
+          ] | random %} {{ service }}'
+        data:
+          entity_id: "{% if service == 'homeassistant.turn_on'  %}\n  {{ expand('group.vacation_lights')\
+            \ | selectattr('state', 'eq', 'off') | map(attribute='entity_id') | list\
+            \ | random }}\n{% else %}\n  {{ expand('group.vacation_lights') | selectattr('state',\
+            \ 'eq', 'on') | map(attribute='entity_id') | list | random }}\n{% endif\
+            \ %}\n"
+      - delay:
+          minutes: '{{ range(1,3) | random | int }}'
+  mode: single
+random_lights:
+  alias: christmas light
+  sequence:
+  - service: light.turn_on
+    data:
+      rgb_color: "{% if now().second % 3 == 0 %}\n  [255, 0, 0]\n{% elif now().second\
+        \ % 3 == 1 %}\n  [0, 255, 0]\n{% else %}\n  [0, 0, 255]\n{% endif %}\n"
+      transition: 5
+    target:
+      entity_id: '{{ entity }}'
+  mode: single
+  fields:
+    entity:
+      description: The entity that will be rainbowed
+      example: light.hue_color_floor_1
+  icon: mdi:pine-tree

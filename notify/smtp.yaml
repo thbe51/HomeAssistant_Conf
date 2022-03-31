@@ -1,0 +1,8 @@
+- platform: smtp
+  name: mx.acat.se
+  sender: hassio@acat.se
+  recipient: thomas@sm0etv.se
+  server: 192.168.66.8
+  port: 25
+  encryption: none
+  sender_name: HomeAssistant
