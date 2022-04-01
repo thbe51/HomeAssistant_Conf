@@ -964,19 +964,11 @@
       - service: notify.mx_acat_se
         data:
           message: Batteri dörr badrum behöver laddas!
-          title: Batteri dörr badrum behöver laddas!
-      - service: notify.persistent_notification
-        data:
-          message: notify.persistent_notification
     - conditions:
       - condition: trigger
         id: door.forrad
       sequence:
       - service: notify.mx_acat_se
-        data:
-          message: Batteri dörr förråd behöver laddas!
-          title: Batteri dörr förråd behöver laddas!
-      - service: notify.persistent_notification
         data:
           message: Batteri dörr förråd behöver laddas!
     - conditions:
@@ -986,10 +978,6 @@
       - service: notify.mx_acat_se
         data:
           message: Batteri dörr kök behöver laddas!
-          title: Batteri dörr kök behöver laddas!
-      - service: notify.persistent_notification
-        data:
-          message: Batteri dörr kök behöver laddas!
     - conditions:
       - condition: trigger
         id: door.sov
@@ -997,19 +985,11 @@
       - service: notify.mx_acat_se
         data:
           message: Batteri dörr sovrum behöver laddas!
-          title: Batteri dörr sovrum behöver laddas!
-      - service: notify.persistent_notification
-        data:
-          message: Batteri dörr sovrum behöver laddas!
     - conditions:
       - condition: trigger
         id: door.vardag
       sequence:
       - service: notify.mx_acat_se
-        data:
-          message: Batteri dörr vardagsrum behöver laddas!
-          title: Batteri dörr vardagsrum behöver laddas!
-      - service: notify.persistent_notification
         data:
           message: Batteri dörr vardagsrum behöver laddas!
     default: []
@@ -1052,19 +1032,11 @@
       - service: notify.mx_acat_se
         data:
           message: Batteri element 1 behöver bytas.
-          title: Batteri element 1 behöver bytas.
-      - service: notify.persistent_notification
-        data:
-          message: Batteri element 1 behöver bytas.
     - conditions:
       - condition: trigger
         id: element.2
       sequence:
       - service: notify.mx_acat_se
-        data:
-          message: Batteri element 2 behöver bytas.
-          title: Batteri element 2 behöver bytas.
-      - service: notify.persistent_notification
         data:
           message: Batteri element 2 behöver bytas.
     - conditions:
@@ -1074,19 +1046,11 @@
       - service: notify.mx_acat_se
         data:
           message: Batteri element 3 behöver bytas.
-          title: Batteri element 3 behöver bytas.
-      - service: notify.persistent_notification
-        data:
-          message: Batteri element 3 behöver bytas.
     - conditions:
       - condition: trigger
         id: element.4
       sequence:
       - service: notify.mx_acat_se
-        data:
-          message: Batteri element 4 behöver bytas.
-          title: Batteri element 4 behöver bytas.
-      - service: notify.persistent_notification
         data:
           message: Batteri element 4 behöver bytas.
     - conditions:
@@ -1096,19 +1060,11 @@
       - service: notify.mx_acat_se
         data:
           message: Batteri element 6 behöver bytas.
-          title: Batteri element 6 behöver bytas.
-      - service: notify.persistent_notification
-        data:
-          message: Batteri element 6 behöver bytas.
     - conditions:
       - condition: trigger
         id: element.7
       sequence:
       - service: notify.mx_acat_se
-        data:
-          message: Batteri element 7 behöver bytas.
-          title: Batteri element 7 behöver bytas.
-      - service: notify.persistent_notification
         data:
           message: Batteri element 7 behöver bytas.
     default: []
@@ -2684,19 +2640,19 @@
     target:
       entity_id: media_player.revo
   mode: single
-- id: '1648476432387'
-  alias: Low battery level detection & notification for all battery sensors
-  description: ''
-  use_blueprint:
-    path: sbyx/low-battery-level-detection-notification-for-all-battery-sensors.yaml
-    input:
-      actions:
-      - device_id: 9df83935863fe95c1cc3871fa9ff16f6
-        domain: zwave_js
-        type: set_value
-      - device_id: f89e5019be07a86e0c630d674a455e6d
-        domain: zwave_js
-        type: set_value
+#- id: '1648476432387'
+#  alias: Low battery level detection & notification for all battery sensors
+#  description: ''
+#  use_blueprint:
+#    path: sbyx/low-battery-level-detection-notification-for-all-battery-sensors.yaml
+#    input:
+#      actions:
+#      - device_id: 9df83935863fe95c1cc3871fa9ff16f6
+#        domain: zwave_js
+#        type: set_value
+#      - device_id: f89e5019be07a86e0c630d674a455e6d
+#        domain: zwave_js
+#        type: set_value
 - id: '1648663756045'
   alias: 'SYS: Github Push'
   description: ''

@@ -42,7 +42,7 @@ discovery: !include conf/discovery.yaml
 google: !include conf/google.yaml
 group: !include_dir_merge_named group/
 http: !include conf/http.yaml
-influxdb: !include conf/influxdb.yaml
+influxdb: !include influxdb.yaml
 light: !include conf/light_group.yaml
 logger: !include conf/logger.yaml
 lovelace: !include lovelace.yaml
