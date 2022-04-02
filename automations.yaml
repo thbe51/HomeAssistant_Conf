@@ -592,7 +592,7 @@
           minutes: 0
           seconds: 10
           milliseconds: 0
-      - service: input_boolean.turn_on
+      - service: input_boolean.turn_off
         data: {}
         target:
           entity_id: input_boolean.rull_7_9
@@ -629,11 +629,10 @@
           - light.badrummet
           - light.forrad
           - light.hue_color_floor_1
-      - service: cover.set_cover_position
-        data:
-          position: 0
+      - service: input_boolean.turn_on
+        data: {}
         target:
-          entity_id: cover.rull_grp_7_9
+          entity_id: input_boolean.rull_7_9
     - conditions:
       - condition: trigger
         id: g.timer.morgon
@@ -2640,19 +2639,6 @@
     target:
       entity_id: media_player.revo
   mode: single
-#- id: '1648476432387'
-#  alias: Low battery level detection & notification for all battery sensors
-#  description: ''
-#  use_blueprint:
-#    path: sbyx/low-battery-level-detection-notification-for-all-battery-sensors.yaml
-#    input:
-#      actions:
-#      - device_id: 9df83935863fe95c1cc3871fa9ff16f6
-#        domain: zwave_js
-#        type: set_value
-#      - device_id: f89e5019be07a86e0c630d674a455e6d
-#        domain: zwave_js
-#        type: set_value
 - id: '1648663756045'
   alias: 'SYS: Github Push'
   description: ''
