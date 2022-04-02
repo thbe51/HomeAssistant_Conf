@@ -1304,51 +1304,6 @@
           entity_id: cover.rull_6
     default: []
   mode: single
-- id: '1635778966310'
-  alias: 'Light: Geofence: switch lights.'
-  description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id: proximity.home
-    id: leaving-home
-    above: '0.5'
-  - platform: numeric_state
-    entity_id: proximity.home
-    below: '0.5'
-    id: approaching-home
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: leaving-home
-      sequence:
-      - service: light.turn_off
-        data: {}
-        target:
-          entity_id:
-          - light.lampgrupp_ovr
-          - light.lampgrupp_sovrum
-      - service: notify.mobile_app_sm_g988b
-        data:
-          message: Belysning släckt.
-    - conditions:
-      - condition: trigger
-        id: approaching-home
-      sequence:
-      - service: light.turn_on
-        data:
-          color_temp: 333
-          brightness: 50
-        target:
-          entity_id:
-          - light.lampgrupp_sovrum
-          - light.lampgrupp_ovr
-      - service: notify.mobile_app_sm_g988b
-        data:
-          message: Belysning tänd.
-    default: []
-  mode: single
 - id: '1636116028430'
   alias: 'BLIND: Rullgardiner 1-9  timer'
   description: ''
