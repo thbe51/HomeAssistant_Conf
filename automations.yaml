@@ -629,6 +629,7 @@
           - light.badrummet
           - light.forrad
           - light.hue_color_floor_1
+          - light.spirallampa
       - service: input_boolean.turn_on
         data: {}
         target:
@@ -819,6 +820,7 @@
           entity_id:
           - light.lampgrupp_ovr
           - light.lampgrupp_sovrum
+          - light.spirallampa
         data:
           transition: 10
     - conditions:
@@ -840,6 +842,11 @@
           transition: 10
           color_temp: 333
           brightness_pct: 50
+      - service: light.turn_on
+        data:
+          brightness: 25
+        target:
+          entity_id: light.spirallampa
     default: []
   mode: single
 - id: '1635689948157'
@@ -871,23 +878,22 @@
     domain: zwave_js
     type: event.value_notification.central_scene
     property: scene
-    property_key: '004'
+    property_key: '003'
     endpoint: 0
     command_class: 91
-    subtype: Endpoint 0 Scene 004
-    value: 3
-    id: light-timer-manual
+    subtype: Endpoint 0 Scene 003
+    id: light-timer-on-off
+    value: 0
   - platform: device
     device_id: b242e1c0aa7dc8f5bb65725384a798be
     domain: zwave_js
     type: event.value_notification.central_scene
     property: scene
-    property_key: 008
+    property_key: '001'
     endpoint: 0
     command_class: 91
-    subtype: Endpoint 0 Scene 008
-    value: 3
-    id: light-timer-auto
+    subtype: Endpoint 0 Scene 001
+    id: SOL-toggle
   condition: []
   action:
   - choose:
@@ -913,20 +919,20 @@
         data: {}
     - conditions:
       - condition: trigger
-        id: light-timer-manual
+        id: light-timer-on-off
       sequence:
-      - service: input_boolean.turn_on
+      - service: input_boolean.toggle
         data: {}
         target:
           entity_id: input_boolean.belysning
     - conditions:
       - condition: trigger
-        id: light-timer-auto
+        id: SOL-toggle
       sequence:
-      - service: input_boolean.turn_off
+      - service: input_boolean.toggle
         data: {}
         target:
-          entity_id: input_boolean.belysning
+          entity_id: input_boolean.solskydd
     default: []
   mode: single
 - id: '1635695253829'
@@ -1848,7 +1854,7 @@
         data:
           brightness_step: 10
         target:
-          entity_id: light.testdimmer
+          entity_id: light.spirallampa
     - conditions:
       - condition: trigger
         id: dim-down
@@ -1857,7 +1863,8 @@
         data:
           brightness_step: -10
         target:
-          entity_id: light.testdimmer
+          entity_id:
+          - light.spirallampa
     - conditions:
       - condition: trigger
         id: dim-on
@@ -1866,7 +1873,8 @@
         data:
           brightness_pct: 100
         target:
-          entity_id: light.testdimmer
+          entity_id:
+          - light.spirallampa
     - conditions:
       - condition: trigger
         id: dim-off
@@ -1874,7 +1882,8 @@
       - service: light.turn_off
         data: {}
         target:
-          entity_id: light.testdimmer
+          entity_id:
+          - light.spirallampa
     default: []
   mode: single
 - id: '1647933127602'
