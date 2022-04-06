@@ -1,6 +1,6 @@
 homeassistant: !include conf/homeassistant.yaml
 default_config:
-###############################################################################
+################################################################################
 automation: !include automations.yaml
 cloud: !include conf/cloud.yaml
 #config
@@ -23,7 +23,7 @@ input_datetime: !include_dir_named input_datetime/
 #my:
 #network:
 #person:
-#scene:
+scene: !include scenes.yaml
 script: !include scripts.yaml
 #ssdp:
 #stream:
@@ -35,7 +35,7 @@ timer: !include_dir_merge_named timer/
 #webhooks:
 #zeroconf:
 #zone:
-###############################################################################
+# End of Default Config ########################################################
 # Other stuff
 cover: !include conf/cover.yaml
 discovery: !include conf/discovery.yaml
