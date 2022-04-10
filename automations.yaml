@@ -421,71 +421,6 @@
           brightness_pct: 31
     default: []
   mode: single
-- id: '1635586763357'
-  alias: 'Light: Hall belysning & timer'
-  description: ''
-  trigger:
-  - platform: device
-    type: turned_off
-    device_id: b59020770d9ac19273e623879226150c
-    entity_id: switch.hallampa
-    domain: switch
-    id: hall.off
-  - platform: device
-    type: turned_on
-    device_id: b59020770d9ac19273e623879226150c
-    entity_id: switch.hallampa
-    domain: switch
-    id: hall.on
-  - platform: event
-    event_type: timer.finished
-    id: hall.timer.end
-    event_data:
-      entity_id: timer.hallen
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: hall.on
-      sequence:
-      - service: switch.turn_on
-        data: {}
-        target:
-          entity_id: switch.hallampa
-      - service: timer.start
-        data:
-          duration: '0'
-        target:
-          entity_id: timer.hallen
-    - conditions:
-      - condition: trigger
-        id: hall.off
-      - condition: state
-        entity_id: input_boolean.belysning
-        state: 'off'
-      sequence:
-      - service: switch.turn_off
-        target:
-          entity_id: switch.hallampa
-        data: {}
-      - service: timer.cancel
-        target:
-          entity_id: timer.hallen
-        data: {}
-    - conditions:
-      - condition: trigger
-        id: hall.timer.end
-      - condition: state
-        entity_id: input_boolean.belysning
-        state: 'off'
-      sequence:
-      - service: switch.turn_off
-        target:
-          entity_id: switch.hallampa
-        data: {}
-    default: []
-  mode: single
 - id: '1635590732004'
   alias: 'Light: Förråd belysning & timer'
   description: ''
@@ -1130,7 +1065,7 @@
     default: []
   mode: single
 - id: '1635710165227'
-  alias: 'BLIND: Rullgardiner 7-9 styrning'
+  alias: 'BLIND: Rullgardiner 789 styrning'
   description: ''
   trigger:
   - platform: state
@@ -1229,7 +1164,7 @@
     default: []
   mode: single
 - id: '1635711218283'
-  alias: 'BLIND: Rullgardiner 1-4 styrning'
+  alias: 'BLIND: Rullgardiner 123 styrning'
   description: ''
   trigger:
   - platform: state
@@ -1251,7 +1186,8 @@
         data:
           position: 100
         target:
-          entity_id: cover.rull_grp_1_4
+          entity_id:
+          - cover.kok_rull_123
     - conditions:
       - condition: trigger
         id: rull1.2.3.4.ner
@@ -1263,7 +1199,6 @@
           entity_id:
           - cover.rull_2
           - cover.rull_3
-          - cover.rull_4
       - condition: state
         entity_id: binary_sensor.dorrsensor_kok_access_control_window_door_is_open
         state: 'off'
@@ -1275,7 +1210,7 @@
     default: []
   mode: single
 - id: '1635750836926'
-  alias: 'BLIND: Rullgardiner 5-6 styrning'
+  alias: 'BLIND: Rullgardiner 456 styrning'
   description: ''
   trigger:
   - platform: state
@@ -1297,7 +1232,8 @@
         data:
           position: 100
         target:
-          entity_id: cover.rull_grp_5_6
+          entity_id:
+          - cover.vardagsrum_rull_456
     - conditions:
       - condition: trigger
         id: rull.5.6.ner
@@ -1306,7 +1242,9 @@
         data:
           position: 0
         target:
-          entity_id: cover.rull_5
+          entity_id:
+          - cover.rull_5
+          - cover.rull_4
       - condition: state
         entity_id: binary_sensor.dorrsensor_vardagsrum_access_control_window_door_is_open
         state: 'off'
@@ -1348,7 +1286,8 @@
         data:
           position: 100
         target:
-          entity_id: cover.rull_morgon
+          entity_id:
+          - cover.rull_16_morgon
     - conditions:
       - condition: trigger
         id: rull1-9.ner
@@ -1556,51 +1495,6 @@
           entity_id:
           - climate.popp_wireless_thermostatic_valve_trv_4
           - climate.popp_wireless_thermostatic_valve_trv_3
-    default: []
-  mode: single
-- id: '1640451021439'
-  alias: 'Light: run vacation lights'
-  description: ''
-  trigger:
-  - platform: sun
-    event: sunset
-    offset: '0'
-    id: sundown
-  - platform: sun
-    event: sunrise
-    offset: '0'
-    id: sunup
-  - platform: state
-    entity_id: input_boolean.vacation_mode
-    id: cancel
-    from: 'on'
-    to: 'off'
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: sundown
-      - condition: state
-        entity_id: input_boolean.vacation_mode
-        state: 'on'
-      sequence:
-      - service: script.turn_on
-        target:
-          entity_id: script.randomize_vacation_lights
-        data: {}
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: trigger
-          id: sunup
-        - condition: trigger
-          id: cancel
-      sequence:
-      - service: script.turn_off
-        target:
-          entity_id: script.randomize_vacation_lights
-        data: {}
     default: []
   mode: single
 - id: '1640618127850'
@@ -2500,7 +2394,8 @@
         data:
           position: 100
         target:
-          entity_id: cover.rull_grp_1_4
+          entity_id:
+          - cover.kok_rull_123
     - conditions:
       - condition: trigger
         id: rullgrp14stop
@@ -2508,7 +2403,8 @@
       - service: cover.stop_cover
         data: {}
         target:
-          entity_id: cover.rull_grp_1_4
+          entity_id:
+          - cover.kok_rull_123
     - conditions:
       - condition: trigger
         id: rullgrp14down
@@ -2522,7 +2418,8 @@
         data:
           position: 0
         target:
-          entity_id: cover.rull_grp_1_4
+          entity_id:
+          - cover.kok_rull_123
     - conditions:
       - condition: trigger
         id: rullgrp56up
@@ -2531,7 +2428,8 @@
         data:
           position: 100
         target:
-          entity_id: cover.rull_grp_5_6
+          entity_id:
+          - cover.vardagsrum_rull_456
     - conditions:
       - condition: trigger
         id: rullgrp56stop
@@ -2539,7 +2437,8 @@
       - service: cover.stop_cover
         data: {}
         target:
-          entity_id: cover.rull_grp_5_6
+          entity_id:
+          - cover.vardagsrum_rull_456
     - conditions:
       - condition: trigger
         id: rullgrp56down
@@ -2553,7 +2452,8 @@
         data:
           position: 0
         target:
-          entity_id: cover.rull_grp_5_6
+          entity_id:
+          - cover.vardagsrum_rull_456
     - conditions:
       - condition: trigger
         id: rullgrp79up
@@ -2562,7 +2462,8 @@
         data:
           position: 100
         target:
-          entity_id: cover.rull_grp_7_9
+          entity_id:
+          - cover.sovrum_rull_789
     - conditions:
       - condition: trigger
         id: rullgrp79stop
@@ -2570,7 +2471,8 @@
       - service: cover.stop_cover
         data: {}
         target:
-          entity_id: cover.rull_grp_7_9
+          entity_id:
+          - cover.sovrum_rull_789
     - conditions:
       - condition: trigger
         id: rullgrp79down
@@ -2584,7 +2486,8 @@
         data:
           position: 0
         target:
-          entity_id: cover.rull_grp_7_9
+          entity_id:
+          - cover.sovrum_rull_789
     default: []
   mode: single
 - id: '1648393211360'

@@ -1,5 +1,5 @@
-  - platform: group    
-    name: Rull - grp. 5-6
-    entities:
-      - cover.rull_5
-      - cover.rull_6
+  #- platform: group    
+  #  name: Rull - grp. 5-6
+  #  entities:
+  #    - cover.rull_5
+  #    - cover.rull_6

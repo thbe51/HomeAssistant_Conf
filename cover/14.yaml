@@ -1,7 +1,7 @@
-  - platform: group
-    name: Rull - grp. 1-4
-    entities:
-      - cover.rull_1
-      - cover.rull_2
-      - cover.rull_3
-      - cover.rull_4
+  #- platform: group
+  #  name: Rull - grp. 1-4
+  #  entities:
+  #    - cover.rull_1
+  #    - cover.rull_2
+  #    - cover.rull_3
+  #    - cover.rull_4
