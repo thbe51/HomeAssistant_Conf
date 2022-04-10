@@ -449,6 +449,10 @@
       - condition: trigger
         id: hall.on
       sequence:
+      - service: switch.turn_on
+        data: {}
+        target:
+          entity_id: switch.hallampa
       - service: timer.start
         data:
           duration: '0'
@@ -461,13 +465,13 @@
         entity_id: input_boolean.belysning
         state: 'off'
       sequence:
-      - service: timer.cancel
-        target:
-          entity_id: timer.hallen
-        data: {}
       - service: switch.turn_off
         target:
           entity_id: switch.hallampa
+        data: {}
+      - service: timer.cancel
+        target:
+          entity_id: timer.hallen
         data: {}
     - conditions:
       - condition: trigger
@@ -1174,7 +1178,7 @@
           position: 50
         target:
           entity_id:
-          - cover.rull_grp_7_9
+          - cover.sovrum_rull_789
     - conditions:
       - condition: trigger
         id: rull.7.8.9.upp
@@ -1183,7 +1187,8 @@
         data:
           position: 100
         target:
-          entity_id: cover.rull_grp_7_9
+          entity_id:
+          - cover.sovrum_rull_789
     - conditions:
       - condition: trigger
         id: rull.7.9.ner
@@ -1210,7 +1215,8 @@
       - service: cover.stop_cover
         data: {}
         target:
-          entity_id: cover.rull_grp_7_9
+          entity_id:
+          - cover.sovrum_rull_789
     - conditions:
       - condition: trigger
         id: cover-down-stop
@@ -1218,7 +1224,8 @@
       - service: cover.stop_cover
         data: {}
         target:
-          entity_id: cover.rull_sovrum
+          entity_id:
+          - cover.sovrum_rull_789
     default: []
   mode: single
 - id: '1635711218283'
