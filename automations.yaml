@@ -2505,7 +2505,7 @@
   - delay:
       hours: 0
       minutes: 0
-      seconds: 2
+      seconds: 1
       milliseconds: 0
   - service: media_player.volume_set
     data:
