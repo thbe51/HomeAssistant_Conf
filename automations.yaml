@@ -551,25 +551,23 @@
           - switch.badrumskap
           - switch.gangen
           - switch.hallampa
+      - service: automation.turn_off
+        data: {}
+        target:
+          entity_id: automation.christmas_strip_led
       - delay:
           hours: 0
           minutes: 0
           seconds: 10
           milliseconds: 0
-      - service: automation.turn_off
-        data: {}
-        target:
-          entity_id: automation.christmas_strip_led
       - service: light.turn_off
         data: {}
         target:
           entity_id:
-          - light.lampgrupp_ovr
-          - light.lampgrupp_sovrum
           - light.badrummet
           - light.forrad
-          - light.hue_color_floor_1
-          - light.spirallampa
+          - light.belysningsgrupp_ovrigt
+          - light.belysningsgrupp_sovrum
       - service: input_boolean.turn_on
         data: {}
         target:
@@ -581,7 +579,8 @@
       - service: light.turn_off
         data: {}
         target:
-          entity_id: light.lampgrupp_sovrum
+          entity_id:
+          - light.belysningsgrupp_sovrum
     default: []
   mode: single
 - id: '1635597184076'

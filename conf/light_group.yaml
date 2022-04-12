@@ -6,10 +6,11 @@
 #      - light.kok
 #      - light.vardagsrum
 #  
-  - platform: group
-    name: LAMPGRUPP SOVRUM
-    entities:
-      - light.sovrummet
-      - light.sang
-      - light.sekretar
-      - light.bord
+#  - platform: group
+#    name: LAMPGRUPP SOVRUM
+#    entities:
+#      - light.sovrummet
+#      - light.sang
+#      - light.sekretar
+#      - light.bord
+[]
