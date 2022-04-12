@@ -59,19 +59,20 @@
     data: {}
   mode: single
 - id: '1633291780750'
-  alias: 'TAGG: Belysning is scanned'
+  alias: 'TAGG: Toggle belysning'
   description: ''
   trigger:
   - platform: tag
-    tag_id: ee87e4fb-bd93-487d-bb08-3962ed7b0396
+    tag_id: 3607e5a1-8180-4c2d-8080-a680dfcfe83d
   condition: []
   action:
   - service: light.toggle
-    target:
-      entity_id: light.hue_lampor
     data:
-      color_temp: 333
-      brightness_pct: 55
+      brightness_pct: 35
+    target:
+      entity_id:
+      - light.belysningsgrupp_sovrum
+      - light.belysningsgrupp_ovrigt
   mode: single
 - id: '1635503856748'
   alias: 'RADIATOR: Element dag/natt timer'
@@ -757,9 +758,8 @@
       - service: light.turn_off
         target:
           entity_id:
-          - light.lampgrupp_ovr
-          - light.lampgrupp_sovrum
-          - light.spirallampa
+          - light.belysningsgrupp_sovrum
+          - light.belysningsgrupp_ovrigt
         data:
           transition: 10
     - conditions:
@@ -769,14 +769,15 @@
       - service: light.turn_on
         target:
           entity_id:
-          - light.lampgrupp_ovr
+          - light.belysningsgrupp_ovrigt
         data:
           color_temp: 333
           transition: 10
           brightness_pct: 60
       - service: light.turn_on
         target:
-          entity_id: light.lampgrupp_sovrum
+          entity_id:
+          - light.belysningsgrupp_sovrum
         data:
           transition: 10
           color_temp: 333
@@ -1620,7 +1621,6 @@
           position: 65
         target:
           entity_id:
-          - cover.rull_3
           - cover.rull_4
     - conditions:
       - condition: trigger
@@ -1633,7 +1633,6 @@
           entity_id:
           - cover.rull_4
           - cover.rull_5
-          - cover.rull_3
           - cover.rull_6
     - conditions:
       - condition: trigger
@@ -1664,7 +1663,6 @@
           position: 100
         target:
           entity_id:
-          - cover.rull_3
           - cover.rull_4
           - cover.rull_5
           - cover.rull_6
@@ -1680,7 +1678,6 @@
           position: 100
         target:
           entity_id:
-          - cover.rull_3
           - cover.rull_4
       - delay:
           hours: 0
@@ -1981,12 +1978,10 @@
   trigger:
   - platform: state
     entity_id: group.somebody_home
-    from: note_home
     to: home
     id: home
   - platform: state
     entity_id: group.somebody_home
-    from: home
     to: not_home
     id: not-home
   condition: []
@@ -2012,6 +2007,7 @@
           entity_id:
           - light.lampgrupp_ovr
           - light.lampgrupp_sovrum
+          - light.spirallampa
       - service: switch.turn_off
         data: {}
         target:

@@ -1,11 +1,11 @@
 #Lights Groups
 #light:
-  - platform: group
-    name: LAMPGRUPP ÖVR.
-    entities:
-      - light.kok
-      - light.vardagsrum
-  
+#  - platform: group
+#    name: LAMPGRUPP ÖVR.
+#    entities:
+#      - light.kok
+#      - light.vardagsrum
+#  
   - platform: group
     name: LAMPGRUPP SOVRUM
     entities:

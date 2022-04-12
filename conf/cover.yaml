@@ -8,12 +8,12 @@
   #    - cover.rull_5
   #    - cover.rull_6
 
-  - platform: group
-    name: Rull - Sovrum
-    entities:
-      - cover.rull_7
-      - cover.rull_8_2
-      - cover.rull_9_2
+  #- platform: group
+  #  name: Rull - Sovrum
+  #  entities:
+  #    - cover.rull_7
+  #    - cover.rull_8_2
+  #    - cover.rull_9_2
   #- platform: group
   #  name: Rull - grp. 1-4
   #  entities:
@@ -26,15 +26,17 @@
   #  entities:
   #    - cover.rull_5
   #    - cover.rull_6
-  - platform: group
-    name: Rull - grp. 7-9
-    entities:
-      - cover.rull_7
-      - cover.rull_8_2
-      - cover.rull_9_2
+  #- platform: group
+  #  name: Rull - grp. 7-9
+  #  entities:
+  #    - cover.rull_7
+  #    - cover.rull_8_2
+  #    - cover.rull_9_2
   #- platform: group
   #  name: Rull - morgon
   #  entities:
   #    - cover.rull_1
   #    - cover.rull_2
   #    - cover.rull_6
+  []
+  
