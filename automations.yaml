@@ -751,6 +751,16 @@
   - platform: time
     id: sun.sunset
     at: input_datetime.lagenhet_tand
+  - platform: state
+    entity_id: input_boolean.home_away
+    from: 'off'
+    to: 'on'
+    id: zone-on
+  - platform: state
+    entity_id: input_boolean.home_away
+    from: 'on'
+    to: 'off'
+    id: zone-off
   condition: []
   action:
   - choose:
@@ -790,6 +800,28 @@
           brightness: 25
         target:
           entity_id: light.spirallampa
+    - conditions:
+      - condition: trigger
+        id: zone-on
+      sequence:
+      - service: light.turn_on
+        data:
+          color_temp: 333
+          brightness_pct: 40
+        target:
+          entity_id:
+          - light.belysningsgrupp_ovrigt
+          - light.belysningsgrupp_sovrum
+    - conditions:
+      - condition: trigger
+        id: zone-off
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id:
+          - light.belysningsgrupp_sovrum
+          - light.belysningsgrupp_ovrigt
     default: []
   mode: single
 - id: '1635689948157'
@@ -2519,4 +2551,48 @@
   action:
   - service: shell_command.pushupdates_to_github
     data: {}
+  mode: single
+- id: '1649858320844'
+  alias: 'SYS: Hemma'
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: device_tracker.samsung_s20_ultra_5g
+    zone: zone.home
+    event: enter
+  - platform: state
+    entity_id: input_boolean.home_away
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: input_boolean.home_away
+    state: 'off'
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.home_away
+  mode: single
+- id: '1649858494096'
+  alias: SYS:Away
+  description: ''
+  trigger:
+  - platform: zone
+    entity_id: device_tracker.samsung_s20_ultra_5g
+    zone: zone.home
+    event: leave
+  - platform: state
+    entity_id: input_boolean.home_away
+    attribute: 'on'
+    from: 'off'
+  condition:
+  - condition: state
+    entity_id: input_boolean.home_away
+    state: 'on'
+  action:
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.home_away
   mode: single
