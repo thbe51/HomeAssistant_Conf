@@ -37,7 +37,6 @@ timer: !include_dir_merge_named timer/
 #zone:
 # End of Default Config ########################################################
 # Other stuff
-cover: !include conf/cover.yaml
 discovery: !include conf/discovery.yaml
 google: !include conf/google.yaml
 group: !include_dir_merge_named group/

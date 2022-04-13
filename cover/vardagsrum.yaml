@@ -1,9 +1,0 @@
-#  - platform: group
-#    name: Rull - Vardagsrum
-#    entities:
-#      - cover.rull_1
-#      - cover.rull_2
-#      - cover.rull_3
-#      - cover.rull_4
-#      - cover.rull_5
-#      - cover.rull_6

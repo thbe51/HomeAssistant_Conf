@@ -1073,14 +1073,14 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: input_boolean.rull_7_9
+    entity_id: input_boolean.rull_789_u_n
     id: rull.7.9.ner
     to: 'on'
   - platform: time
     at: input_datetime.sovrum_rull_9_upp
     id: rull.7.9.timer
   - platform: state
-    entity_id: input_boolean.rull_7_9
+    entity_id: input_boolean.rull_789_u_n
     id: rull.7.8.9.upp
     to: 'off'
   - platform: device
@@ -1172,13 +1172,13 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: input_boolean.rull_1_4
+    entity_id: input_boolean.rull_123_u_n
     id: rull1.2.3.4.upp
     to: 'off'
   - platform: state
     id: rull1.2.3.4.ner
     to: 'on'
-    entity_id: input_boolean.rull_1_4
+    entity_id: input_boolean.rull_123_u_n
   condition: []
   action:
   - choose:
@@ -1218,11 +1218,11 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: input_boolean.rull_5_6
+    entity_id: input_boolean.rull_456_u_n
     id: rull.5.6.upp
     to: 'off'
   - platform: state
-    entity_id: input_boolean.rull_5_6
+    entity_id: input_boolean.rull_456_u_n
     id: rull.5.6.ner
     to: 'on'
   condition: []
@@ -1299,9 +1299,9 @@
       - service: input_boolean.turn_on
         target:
           entity_id:
-          - input_boolean.rull_1_4
-          - input_boolean.rull_5_6
-          - input_boolean.rull_7_9
+          - input_boolean.rull_123_u_n
+          - input_boolean.rull_456_u_n
+          - input_boolean.rull_789_u_n
         data: {}
     - conditions:
       - condition: trigger
@@ -1310,9 +1310,9 @@
       - service: input_boolean.turn_off
         target:
           entity_id:
-          - input_boolean.rull_1_4
-          - input_boolean.rull_5_6
-          - input_boolean.rull_7_9
+          - input_boolean.rull_123_u_n
+          - input_boolean.rull_456_u_n
+          - input_boolean.rull_789_u_n
         data: {}
     - conditions:
       - condition: trigger
@@ -1556,8 +1556,6 @@
     id: matbord_sensor_on
   - platform: event
     event_type: timer.finished
-    event_data:
-      entity_id: timer.matbord
     id: matbord_finished
   condition: []
   action:
@@ -1572,10 +1570,10 @@
       - service: timer.start
         data: {}
         target:
-          entity_id: timer.matbord
+          entity_id:
+          - timer.matbord_timer
       - service: light.turn_on
         data:
-          transition: 3
           color_temp: 333
           brightness_pct: 60
         target:
@@ -1585,14 +1583,13 @@
         id: matbord_finished
       sequence:
       - service: light.turn_off
-        data:
-          transition: 2
+        data: {}
         target:
           entity_id: light.kok
     default: []
   mode: single
 - id: '1647502143323'
-  alias: 'BLIND: Solskydd rull 4+5'
+  alias: 'BLIND: Solskydd rull 45'
   description: ''
   trigger:
   - platform: state
