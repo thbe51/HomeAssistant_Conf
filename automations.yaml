@@ -555,6 +555,10 @@
         data: {}
         target:
           entity_id: automation.christmas_strip_led
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id: light.hue_color_floor_1
       - delay:
           hours: 0
           minutes: 0
