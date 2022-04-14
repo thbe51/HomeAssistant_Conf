@@ -39,7 +39,6 @@ timer: !include_dir_merge_named timer/
 # Other stuff
 discovery: !include conf/discovery.yaml
 google: !include conf/google.yaml
-#group: !include_dir_merge_named group/
 http: !include conf/http.yaml
 influxdb: !include influxdb.yaml
 logger: !include conf/logger.yaml

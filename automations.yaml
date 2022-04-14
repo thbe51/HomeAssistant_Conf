@@ -1301,7 +1301,7 @@
   - platform: sun
     event: sunset
     id: rull1-9.ner
-    offset: 00:30
+    offset: 00:00
   - platform: time
     at: 09:00
     id: rull1-9.upp
@@ -2568,6 +2568,9 @@
   - condition: state
     entity_id: input_boolean.home_away
     state: 'off'
+  - condition: sun
+    before: sunrise
+    after: sunset
   action:
   - service: input_boolean.turn_on
     data: {}
