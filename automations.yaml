@@ -309,7 +309,8 @@
       sequence:
       - service: input_boolean.turn_off
         target:
-          entity_id: input_boolean.rull_7_9
+          entity_id:
+          - input_boolean.rull_789_u_n
         data: {}
     - conditions:
       - condition: trigger
@@ -317,7 +318,8 @@
       sequence:
       - service: input_boolean.turn_on
         target:
-          entity_id: input_boolean.rull_7_9
+          entity_id:
+          - input_boolean.rull_789_u_n
         data: {}
     default: []
   mode: single
@@ -535,7 +537,8 @@
       - service: input_boolean.turn_off
         data: {}
         target:
-          entity_id: input_boolean.rull_7_9
+          entity_id:
+          - input_boolean.rull_789_u_n
     - conditions:
       - condition: trigger
         id: g-off
@@ -575,7 +578,8 @@
       - service: input_boolean.turn_on
         data: {}
         target:
-          entity_id: input_boolean.rull_7_9
+          entity_id:
+          - input_boolean.rull_789_u_n
     - conditions:
       - condition: trigger
         id: g.timer.morgon
@@ -879,8 +883,8 @@
       - service: input_boolean.turn_off
         target:
           entity_id:
-          - input_boolean.rull_1_4
-          - input_boolean.rull_5_6
+          - input_boolean.rull_123_u_n
+          - input_boolean.rull_456_u_n
         data: {}
     - conditions:
       - condition: trigger
@@ -889,8 +893,8 @@
       - service: input_boolean.turn_on
         target:
           entity_id:
-          - input_boolean.rull_1_4
-          - input_boolean.rull_5_6
+          - input_boolean.rull_123_u_n
+          - input_boolean.rull_456_u_n
         data: {}
     - conditions:
       - condition: trigger
