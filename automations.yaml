@@ -74,183 +74,6 @@
       - light.belysningsgrupp_sovrum
       - light.belysningsgrupp_ovrigt
   mode: single
-- id: '1635503856748'
-  alias: 'RADIATOR: Element dag/natt timer'
-  description: ''
-  trigger:
-  - platform: time
-    at: input_datetime.element_dag
-    id: time.0500
-  - platform: time
-    id: time.2100
-    at: input_datetime.element_natt
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: time.0500
-      - condition: state
-        entity_id: input_boolean.elements
-        state: 'off'
-      - condition: state
-        entity_id: input_boolean.elements
-        state: 'off'
-      sequence:
-      - service: input_boolean.turn_on
-        target:
-          entity_id: input_boolean.element_dag_natt
-        data: {}
-    - conditions:
-      - condition: trigger
-        id: time.2100
-      - condition: state
-        entity_id: input_boolean.elements
-        state: 'off'
-      sequence:
-      - service: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.element_dag_natt
-        data: {}
-    default: []
-  mode: single
-- id: '1635518157314'
-  alias: 'RADIATOR: Element 1-4 Low/High'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: input_boolean.element_1_4
-    id: element-1-4-low
-    to: 'on'
-  - platform: state
-    entity_id: input_boolean.element_1_4
-    id: element-1-4-high
-    to: 'off'
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: element-1-4-low
-      sequence:
-      - service: climate.set_temperature
-        target:
-          entity_id:
-          - climate.popp_wireless_thermostatic_valve_trv
-          - climate.popp_wireless_thermostatic_valve_trv_2
-        data:
-          temperature: 18
-      - service: climate.set_temperature
-        data:
-          temperature: 20
-        target:
-          entity_id:
-          - climate.popp_wireless_thermostatic_valve_trv_3
-          - climate.popp_wireless_thermostatic_valve_trv_4
-    - conditions:
-      - condition: trigger
-        id: element-1-4-high
-      sequence:
-      - service: climate.set_temperature
-        target:
-          entity_id:
-          - climate.popp_wireless_thermostatic_valve_trv
-          - climate.popp_wireless_thermostatic_valve_trv_2
-        data:
-          temperature: 24
-      - service: climate.set_temperature
-        target:
-          entity_id:
-          - climate.popp_wireless_thermostatic_valve_trv_3
-          - climate.popp_wireless_thermostatic_valve_trv_4
-        data:
-          temperature: 26
-    default: []
-  mode: single
-- id: '1635518793395'
-  alias: 'RADIATOR: Element 6-7 Low/High'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: input_boolean.element_6_7
-    id: element-6-7-low
-    to: 'on'
-  - platform: state
-    entity_id: input_boolean.element_6_7
-    id: element-6-7-high
-    to: 'off'
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: element-6-7-low
-      sequence:
-      - service: climate.set_temperature
-        data:
-          temperature: 19
-        target:
-          entity_id: climate.popp_wireless_thermostatic_valve_trv_5
-      - service: climate.set_temperature
-        data:
-          temperature: 21
-        target:
-          entity_id: climate.popp_wireless_thermostatic_valve_trv_6
-    - conditions:
-      - condition: trigger
-        id: element-6-7-high
-      sequence:
-      - service: climate.set_temperature
-        data:
-          temperature: 25
-        target:
-          entity_id: climate.popp_wireless_thermostatic_valve_trv_5
-      - service: climate.set_temperature
-        data:
-          temperature: 27
-        target:
-          entity_id: climate.popp_wireless_thermostatic_valve_trv_6
-    default: []
-  mode: single
-- id: '1635523377722'
-  alias: 'RADIATOR: Element Set dag/natt'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: input_boolean.element_dag_natt
-    id: el-set-dag
-    to: 'off'
-    from: 'on'
-  - platform: state
-    entity_id: input_boolean.element_dag_natt
-    id: el-set-night
-    to: 'on'
-    from: 'off'
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: el-set-night
-      sequence:
-      - service: input_boolean.turn_off
-        target:
-          entity_id:
-          - input_boolean.element_1_4
-          - input_boolean.element_6_7
-        data: {}
-    - conditions:
-      - condition: trigger
-        id: el-set-dag
-      sequence:
-      - service: input_boolean.turn_on
-        target:
-          entity_id:
-          - input_boolean.element_1_4
-          - input_boolean.element_6_7
-        data: {}
-    default: []
-  mode: single
 - id: '1635525114817'
   alias: 'REMOTE: Panel sovrum'
   description: ''
@@ -600,9 +423,6 @@
     id: bed.off
     event_data:
       entity_id: timer.heating
-  - platform: time
-    at: '18:00'
-    id: bed.on
   - platform: state
     entity_id: input_boolean.google_home
     id: google.goodnight
@@ -617,13 +437,7 @@
       - service: switch.turn_off
         target:
           entity_id: switch.varmefilt
-    - conditions:
-      - condition: trigger
-        id: bed.on
-      sequence:
-      - service: switch.turn_on
-        target:
-          entity_id: switch.varmefilt
+        data: {}
     - conditions:
       - condition: trigger
         id: google.goodnight
@@ -1401,142 +1215,6 @@
       entity_id: input_boolean.google_on_off
     data: {}
   mode: single
-- id: '1640077456888'
-  alias: 'RADIATOR: Element - MAX'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: input_boolean.element_max
-    from: 'off'
-    to: 'on'
-    id: element-max-on
-  - platform: state
-    entity_id: input_boolean.element_max
-    id: element-max-off
-    from: 'on'
-    to: 'off'
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: element-max-on
-      sequence:
-      - service: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.element_min
-        data: {}
-      - service: input_boolean.turn_on
-        target:
-          entity_id: input_boolean.elements
-        data: {}
-      - service: climate.set_temperature
-        target:
-          entity_id:
-          - climate.popp_wireless_thermostatic_valve_trv
-          - climate.popp_wireless_thermostatic_valve_trv_2
-          - climate.popp_wireless_thermostatic_valve_trv_3
-          - climate.popp_wireless_thermostatic_valve_trv_4
-          - climate.popp_wireless_thermostatic_valve_trv_5
-          - climate.popp_wireless_thermostatic_valve_trv_6
-        data:
-          temperature: 28
-    - conditions:
-      - condition: trigger
-        id: element-max-off
-      sequence:
-      - service: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.elements
-        data: {}
-      - service: climate.set_temperature
-        target:
-          entity_id:
-          - climate.popp_wireless_thermostatic_valve_trv
-          - climate.popp_wireless_thermostatic_valve_trv_2
-          - climate.popp_wireless_thermostatic_valve_trv_3
-          - climate.popp_wireless_thermostatic_valve_trv_4
-          - climate.popp_wireless_thermostatic_valve_trv_5
-          - climate.popp_wireless_thermostatic_valve_trv_6
-        data:
-          temperature: 23
-    default: []
-  mode: single
-- id: '1640100227641'
-  alias: 'RADIATOR: Element - MIN'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: input_boolean.element_min
-    from: 'off'
-    to: 'on'
-    id: element-min-on
-  - platform: state
-    entity_id: input_boolean.element_min
-    id: element-min-off
-    from: 'on'
-    to: 'off'
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: element-min-on
-      sequence:
-      - service: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.element_max
-        data: {}
-      - service: input_boolean.turn_on
-        target:
-          entity_id: input_boolean.elements
-        data: {}
-      - service: climate.set_temperature
-        data:
-          temperature: 7
-        target:
-          entity_id:
-          - climate.popp_wireless_thermostatic_valve_trv
-          - climate.popp_wireless_thermostatic_valve_trv_2
-          - climate.popp_wireless_thermostatic_valve_trv_3
-          - climate.popp_wireless_thermostatic_valve_trv_4
-          - climate.popp_wireless_thermostatic_valve_trv_5
-          - climate.popp_wireless_thermostatic_valve_trv_6
-    - conditions:
-      - condition: trigger
-        id: element-min-off
-      sequence:
-      - service: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.elements
-        data: {}
-      - service: climate.set_temperature
-        data:
-          temperature: 25
-        target:
-          entity_id:
-          - climate.popp_wireless_thermostatic_valve_trv_5
-      - service: climate.set_temperature
-        data:
-          temperature: 27
-        target:
-          entity_id: climate.popp_wireless_thermostatic_valve_trv_6
-      - service: climate.set_temperature
-        data:
-          temperature: 24
-        target:
-          entity_id:
-          - climate.popp_wireless_thermostatic_valve_trv_2
-          - climate.popp_wireless_thermostatic_valve_trv
-      - service: climate.set_temperature
-        data:
-          temperature: 26
-        target:
-          entity_id:
-          - climate.popp_wireless_thermostatic_valve_trv_4
-          - climate.popp_wireless_thermostatic_valve_trv_3
-    default: []
-  mode: single
 - id: '1640618127850'
   alias: 'SYS: DAG<-->NATT'
   description: ''
@@ -2008,52 +1686,6 @@
               milliseconds: 500
     default: []
   mode: restart
-- id: '1647977328240'
-  alias: 'SYS: Presense - First Person Arrives Home'
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: group.somebody_home
-    to: home
-    id: home
-  - platform: state
-    entity_id: group.somebody_home
-    to: not_home
-    id: not-home
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: home
-      sequence:
-      - service: light.turn_on
-        data:
-          color_temp: 333
-          brightness: 50
-        target:
-          entity_id: light.lampgrupp_ovr
-    - conditions:
-      - condition: trigger
-        id: not-home
-      sequence:
-      - service: light.turn_off
-        data: {}
-        target:
-          entity_id:
-          - light.lampgrupp_ovr
-          - light.lampgrupp_sovrum
-          - light.spirallampa
-      - service: switch.turn_off
-        data: {}
-        target:
-          entity_id:
-          - switch.arbetsbord
-          - switch.gangen
-          - switch.hallampa
-          - switch.sang
-    default: []
-  mode: single
 - id: '1648275457307'
   alias: 'BLIND: Styrning av alla rullgardiner'
   description: ''
@@ -2564,19 +2196,15 @@
     entity_id: device_tracker.samsung_s20_ultra_5g
     zone: zone.home
     event: enter
-  - platform: state
-    entity_id: input_boolean.home_away
-    from: 'off'
-    to: 'on'
   condition:
   - condition: state
     entity_id: input_boolean.home_away
-    state: 'off'
+    state: 'on'
   - condition: sun
     before: sunrise
     after: sunset
   action:
-  - service: input_boolean.turn_on
+  - service: input_boolean.turn_off
     data: {}
     target:
       entity_id: input_boolean.home_away
@@ -2589,16 +2217,12 @@
     entity_id: device_tracker.samsung_s20_ultra_5g
     zone: zone.home
     event: leave
-  - platform: state
-    entity_id: input_boolean.home_away
-    attribute: 'on'
-    from: 'off'
   condition:
   - condition: state
     entity_id: input_boolean.home_away
-    state: 'on'
+    state: 'off'
   action:
-  - service: input_boolean.turn_off
+  - service: input_boolean.turn_on
     data: {}
     target:
       entity_id: input_boolean.home_away
