@@ -30,7 +30,7 @@ script: !include scripts.yaml
 #sun:
 #system_health:
 #tag:
-timer: !include_dir_merge_named timer/
+#timer:
 #usb:
 #webhooks:
 #zeroconf:

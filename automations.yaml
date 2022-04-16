@@ -248,7 +248,7 @@
     default: []
   mode: single
 - id: '1635590732004'
-  alias: 'Light: Förråd belysning & timer'
+  alias: 'LIGHT: Förråd belysning & timer'
   description: ''
   trigger:
   - type: not_opened
@@ -283,9 +283,9 @@
           entity_id: light.forrad
         data: {}
       - service: timer.cancel
+        data: {}
         target:
           entity_id: timer.forrad
-        data: {}
     - conditions:
       - condition: trigger
         id: frad.on
@@ -330,7 +330,7 @@
     event_type: timer.finished
     id: g.timer.morgon
     event_data:
-      entity_id: timer.sovrum
+      entity_id: timer.sovrum_morgon
   condition: []
   action:
   - choose:
@@ -344,7 +344,7 @@
       - service: timer.start
         data: {}
         target:
-          entity_id: timer.sovrum
+          entity_id: timer.sovrum_morgon
       - service: light.turn_on
         data:
           brightness_pct: 10
@@ -422,7 +422,7 @@
     event_type: timer.finished
     id: bed.off
     event_data:
-      entity_id: timer.heating
+      entity_id: timer.sangvarme
   - platform: state
     entity_id: input_boolean.google_home
     id: google.goodnight
@@ -446,11 +446,12 @@
         data:
           duration: '0'
         target:
-          entity_id: timer.heating
+          entity_id:
+          - timer.sangvarme
     default: []
   mode: single
 - id: '1635614367005'
-  alias: 'Light: Badrum belysning & timer'
+  alias: 'LIGHT: Badrum belysning & timer'
   description: ''
   trigger:
   - type: not_opened
@@ -522,7 +523,7 @@
       - condition: trigger
         id: bad.opened
       - condition: state
-        entity_id: input_boolean.dag_natt
+        entity_id: input_boolean.day_night
         state: 'off'
       sequence:
       - service: light.turn_on
@@ -560,15 +561,9 @@
     default: []
   mode: single
 - id: '1635689050079'
-  alias: 'Light: Lägenhet allmän belysning'
+  alias: 'ZONE: Lägenhet allmän belysning'
   description: ''
   trigger:
-  - platform: time
-    id: sun.sunrise
-    at: input_datetime.lagenhet_slack
-  - platform: time
-    id: sun.sunset
-    at: input_datetime.lagenhet_tand
   - platform: state
     entity_id: input_boolean.home_away
     from: 'off'
@@ -582,42 +577,6 @@
   condition: []
   action:
   - choose:
-    - conditions:
-      - condition: trigger
-        id: sun.sunrise
-      sequence:
-      - service: light.turn_off
-        target:
-          entity_id:
-          - light.belysningsgrupp_sovrum
-          - light.belysningsgrupp_ovrigt
-        data:
-          transition: 10
-    - conditions:
-      - condition: trigger
-        id: sun.sunset
-      sequence:
-      - service: light.turn_on
-        target:
-          entity_id:
-          - light.belysningsgrupp_ovrigt
-        data:
-          color_temp: 333
-          transition: 10
-          brightness_pct: 60
-      - service: light.turn_on
-        target:
-          entity_id:
-          - light.belysningsgrupp_sovrum
-        data:
-          transition: 10
-          color_temp: 333
-          brightness_pct: 50
-      - service: light.turn_on
-        data:
-          brightness: 25
-        target:
-          entity_id: light.spirallampa
     - conditions:
       - condition: trigger
         id: zone-on
@@ -868,7 +827,7 @@
     default: []
   mode: single
 - id: '1635709599161'
-  alias: 'Light: Styrning belysning spärr timer'
+  alias: 'LIGHT: Styrning belysning spärr timer'
   description: ''
   trigger:
   - platform: state
@@ -926,9 +885,6 @@
     entity_id: input_boolean.rull_789_u_n
     id: rull.7.9.ner
     to: 'on'
-  - platform: time
-    at: input_datetime.sovrum_rull_9_upp
-    id: rull.7.9.timer
   - platform: state
     entity_id: input_boolean.rull_789_u_n
     id: rull.7.8.9.upp
@@ -958,16 +914,6 @@
   condition: []
   action:
   - choose:
-    - conditions:
-      - condition: trigger
-        id: rull.7.9.timer
-      sequence:
-      - service: cover.set_cover_position
-        data:
-          position: 50
-        target:
-          entity_id:
-          - cover.sovrum_rull_789
     - conditions:
       - condition: trigger
         id: rull.7.8.9.upp
@@ -1109,91 +1055,6 @@
           entity_id: cover.rull_6
     default: []
   mode: single
-- id: '1636116028430'
-  alias: 'BLIND: Rullgardiner 1-9  timer'
-  description: ''
-  trigger:
-  - platform: time
-    id: rull1.2..6.timer
-    at: input_datetime.vardags_rull_1_6_upp
-  - platform: sun
-    event: sunset
-    id: rull1-9.ner
-    offset: 00:00
-  - platform: time
-    at: 09:00
-    id: rull1-9.upp
-  - type: not_opened
-    platform: device
-    device_id: c14a9d08240820703aa8272b45a58a6b
-    entity_id: binary_sensor.dorrsensor_sovrum_access_control_window_door_is_open
-    domain: binary_sensor
-    id: sovrumdorr-closes
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: rull1.2..6.timer
-      sequence:
-      - service: cover.set_cover_position
-        data:
-          position: 100
-        target:
-          entity_id:
-          - cover.rull_16_morgon
-    - conditions:
-      - condition: trigger
-        id: rull1-9.ner
-      sequence:
-      - service: input_boolean.turn_on
-        target:
-          entity_id:
-          - input_boolean.rull_123_u_n
-          - input_boolean.rull_456_u_n
-          - input_boolean.rull_789_u_n
-        data: {}
-    - conditions:
-      - condition: trigger
-        id: rull1-9.upp
-      sequence:
-      - service: input_boolean.turn_off
-        target:
-          entity_id:
-          - input_boolean.rull_123_u_n
-          - input_boolean.rull_456_u_n
-          - input_boolean.rull_789_u_n
-        data: {}
-    - conditions:
-      - condition: trigger
-        id: sovrumdorr-closes
-      - condition: state
-        entity_id: input_boolean.rull_7_9
-        state: 'on'
-      sequence:
-      - service: cover.set_cover_position
-        data:
-          position: 0
-        target:
-          entity_id: cover.rull_8_2
-    default: []
-  mode: single
-- id: '1637616027105'
-  alias: 'Light: Belysning släck-timer'
-  description: ''
-  trigger:
-  - platform: time
-    at: input_datetime.light_slack_sov_kok
-  condition: []
-  action:
-  - service: light.turn_off
-    target:
-      entity_id:
-      - light.kok
-      - light.sovrummet
-    data:
-      transition: 30
-  mode: single
 - id: '1638685645995'
   alias: 'SYS: Reset_boolean'
   description: ''
@@ -1215,39 +1076,8 @@
       entity_id: input_boolean.google_on_off
     data: {}
   mode: single
-- id: '1640618127850'
-  alias: 'SYS: DAG<-->NATT'
-  description: ''
-  trigger:
-  - platform: time
-    at: input_datetime.dag
-    id: DAG
-  - platform: time
-    id: NATT
-    at: input_datetime.night
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: DAG
-      sequence:
-      - service: input_boolean.turn_on
-        target:
-          entity_id: input_boolean.dag_natt
-        data: {}
-    - conditions:
-      - condition: trigger
-        id: NATT
-      sequence:
-      - service: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.dag_natt
-        data: {}
-    default: []
-  mode: single
 - id: '1641927964232'
-  alias: 'Light: Christmas strip led'
+  alias: 'LIGHT: Christmas strip led'
   description: Rotating color every second
   trigger:
   - hours: '*'
@@ -1261,7 +1091,7 @@
       entity: light.hue_color_floor_1
   mode: single
 - id: '1646294684873'
-  alias: 'Light: Matbord motion timer'
+  alias: 'LIGHT: Matbord motion timer'
   description: ''
   trigger:
   - platform: state
@@ -1408,7 +1238,7 @@
     default: []
   mode: single
 - id: '1647894955837'
-  alias: 'Light: Dim One Light One Step On Press'
+  alias: 'LIGHT: Dim One Light One Step On Press'
   description: ''
   trigger:
   - platform: device
@@ -1499,7 +1329,7 @@
     default: []
   mode: single
 - id: '1647933127602'
-  alias: 'Light: S - Dim One Light by step value Until Release'
+  alias: 'LIGHT: S - Dim One Light by step value Until Release'
   description: ''
   trigger:
   - platform: device
@@ -1592,7 +1422,7 @@
     default: []
   mode: restart
 - id: '1647959480381'
-  alias: 'Light: V - Dim One Light by step value Until Release'
+  alias: 'LIGHT: V - Dim One Light by step value Until Release'
   description: ''
   trigger:
   - platform: device
