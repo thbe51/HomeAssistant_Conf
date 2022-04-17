@@ -5,7 +5,7 @@ random_lights:
     data:
       rgb_color: "{% if now().second % 3 == 0 %}\n  [255, 0, 0]\n{% elif now().second\
         \ % 3 == 1 %}\n  [0, 255, 0]\n{% else %}\n  [0, 0, 255]\n{% endif %}\n"
-      transition: 5
+      transition: 10
     target:
       entity_id: '{{ entity }}'
   mode: single
