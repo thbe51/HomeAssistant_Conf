@@ -315,15 +315,15 @@
     default: []
   mode: single
 - id: '1635596267227'
-  alias: 'SYS: Google Home'
+  alias: 'GOOGLE: G-Home'
   description: ''
   trigger:
   - platform: state
-    entity_id: input_boolean.google_home
+    entity_id: input_boolean.googlehome_natt_dag
     to: 'on'
     id: g-on
   - platform: state
-    entity_id: input_boolean.google_home
+    entity_id: input_boolean.googlehome_natt_dag
     to: 'off'
     id: g-off
   - platform: event
@@ -424,7 +424,7 @@
     event_data:
       entity_id: timer.sangvarme
   - platform: state
-    entity_id: input_boolean.google_home
+    entity_id: input_boolean.googlehome_natt_dag
     id: google.goodnight
     to: 'off'
   condition: []
@@ -920,6 +920,11 @@
     subtype: Endpoint 0 Scene 008
     value: 3
     id: cover-down-stop
+  - platform: state
+    entity_id: binary_sensor.dorrsensor_sovrum_access_control_window_door_is_open
+    to: 'off'
+    from: 'on'
+    id: cover-8_door_closed
   condition: []
   action:
   - choose:
@@ -970,6 +975,17 @@
         target:
           entity_id:
           - cover.sovrum_rull_789
+    - conditions:
+      - condition: trigger
+        id: cover-8_door_closed
+      - condition: state
+        entity_id: input_boolean.rull_789_u_n
+        state: 'on'
+      sequence:
+      - service: cover.close_cover
+        data: {}
+        target:
+          entity_id: cover.rull_8_2
     default: []
   mode: single
 - id: '1635711218283'
@@ -978,18 +994,23 @@
   trigger:
   - platform: state
     entity_id: input_boolean.rull_123_u_n
-    id: rull1.2.3.4.upp
+    id: rull-123-upp
     to: 'off'
   - platform: state
-    id: rull1.2.3.4.ner
+    id: rull-123-ner
     to: 'on'
     entity_id: input_boolean.rull_123_u_n
+  - platform: state
+    entity_id: binary_sensor.dorrsensor_kok_access_control_window_door_is_open
+    to: 'off'
+    id: cover-1_door_closed
+    from: 'on'
   condition: []
   action:
   - choose:
     - conditions:
       - condition: trigger
-        id: rull1.2.3.4.upp
+        id: rull-123-upp
       sequence:
       - service: cover.set_cover_position
         data:
@@ -999,7 +1020,7 @@
           - cover.kok_rull_123
     - conditions:
       - condition: trigger
-        id: rull1.2.3.4.ner
+        id: rull-123-ner
       sequence:
       - service: cover.set_cover_position
         data:
@@ -1016,6 +1037,17 @@
           position: 0
         target:
           entity_id: cover.rull_1
+    - conditions:
+      - condition: trigger
+        id: cover-1_door_closed
+      - condition: state
+        entity_id: input_boolean.rull_123_u_n
+        state: 'on'
+      sequence:
+      - service: cover.close_cover
+        data: {}
+        target:
+          entity_id: cover.rull_1
     default: []
   mode: single
 - id: '1635750836926'
@@ -1024,18 +1056,23 @@
   trigger:
   - platform: state
     entity_id: input_boolean.rull_456_u_n
-    id: rull.5.6.upp
+    id: rull-456-upp
     to: 'off'
   - platform: state
     entity_id: input_boolean.rull_456_u_n
-    id: rull.5.6.ner
+    id: rull-456-ner
     to: 'on'
+  - platform: state
+    entity_id: binary_sensor.dorrsensor_vardagsrum_access_control_window_door_is_open
+    from: 'on'
+    to: 'off'
+    id: cover-6_door_closed
   condition: []
   action:
   - choose:
     - conditions:
       - condition: trigger
-        id: rull.5.6.upp
+        id: rull-456-upp
       sequence:
       - service: cover.set_cover_position
         data:
@@ -1045,7 +1082,7 @@
           - cover.vardagsrum_rull_456
     - conditions:
       - condition: trigger
-        id: rull.5.6.ner
+        id: rull-456-ner
       sequence:
       - service: cover.set_cover_position
         data:
@@ -1060,6 +1097,17 @@
       - service: cover.set_cover_position
         data:
           position: 0
+        target:
+          entity_id: cover.rull_6
+    - conditions:
+      - condition: trigger
+        id: cover-6_door_closed
+      - condition: state
+        entity_id: input_boolean.rull_456_u_n
+        state: 'on'
+      sequence:
+      - service: cover.close_cover
+        data: {}
         target:
           entity_id: cover.rull_6
     default: []
@@ -1078,7 +1126,8 @@
     data: {}
   - service: input_boolean.turn_on
     target:
-      entity_id: input_boolean.google_home
+      entity_id:
+      - input_boolean.googlehome_natt_dag
     data: {}
   - service: input_boolean.turn_off
     target:
@@ -2028,7 +2077,7 @@
     data: {}
   mode: single
 - id: '1649858320844'
-  alias: 'SYS: Hemma'
+  alias: 'ZONE: Hemma'
   description: ''
   trigger:
   - platform: zone
@@ -2049,7 +2098,7 @@
       entity_id: input_boolean.home_away
   mode: single
 - id: '1649858494096'
-  alias: SYS:Away
+  alias: ZONE:Away
   description: ''
   trigger:
   - platform: zone
@@ -2065,4 +2114,17 @@
     data: {}
     target:
       entity_id: input_boolean.home_away
+  mode: single
+- id: '1650178057710'
+  alias: 'TEST: SPEAKING'
+  description: ''
+  trigger:
+  - platform: time
+    at: 08:55:00
+  condition: []
+  action:
+  - service: tts.google_say
+    data:
+      entity_id: media_player.nest_hub
+      message: The Time is 8:55 AM
   mode: single

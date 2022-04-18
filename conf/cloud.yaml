@@ -1,8 +1,7 @@
 google_actions:
   filter:
     include_entities:
-      - input_boolean.google_home
-      - switch.arbetsbord
+      - input_boolean.googlehome_natt_dag
 #    include_domains:
 #      - switch
 #    exclude_entities:

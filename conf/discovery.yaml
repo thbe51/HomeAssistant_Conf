@@ -1,6 +1,2 @@
-ignore:
-  - yamaha
-  - logitech_mediaserver
-  - frontier_silicon
-  - harmony
-  - sabnzbd
+enable:
+  - device_tracker

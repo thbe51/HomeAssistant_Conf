@@ -10,7 +10,7 @@
   customize_domain:
     automation:
       initial_state: on
-  packages: !include_dir_named packages
+  #packages: !include_dir_named packages
   auth_providers:
     - type: homeassistant
     - type: trusted_networks
