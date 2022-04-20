@@ -119,13 +119,6 @@
         target:
           entity_id: switch.varmefilt
         data: {}
-      - service: notify.lametric
-        data:
-          message: Sängvärme
-          data:
-            sound: notification
-          title: Sängvärme
-          target: Sovrum
     - conditions:
       - condition: trigger
         id: panel-s-4
@@ -1451,7 +1444,7 @@
               brightness_step_pct: 3
             target:
               entity_id:
-              - light.lampgrupp_sovrum
+              - light.belysningsgrupp_sovrum
           - delay:
               hours: 0
               minutes: 0
@@ -1471,7 +1464,7 @@
               brightness_step_pct: -3
             target:
               entity_id:
-              - light.lampgrupp_sovrum
+              - light.belysningsgrupp_sovrum
           - delay:
               hours: 0
               minutes: 0
@@ -1545,7 +1538,7 @@
               color_temp: 333
             target:
               entity_id:
-              - light.lampgrupp_ovr
+              - light.belysningsgrupp_ovrigt
           - delay:
               hours: 0
               minutes: 0
@@ -1566,7 +1559,7 @@
               color_temp: 333
             target:
               entity_id:
-              - light.lampgrupp_ovr
+              - light.belysningsgrupp_ovrigt
           - delay:
               hours: 0
               minutes: 0
@@ -2041,29 +2034,6 @@
           entity_id:
           - cover.sovrum_rull_789
     default: []
-  mode: single
-- id: '1648393211360'
-  alias: 'RADIO: Turn on Radio'
-  description: ''
-  trigger:
-  - platform: time
-    at: input_datetime.radio_on
-  condition: []
-  action:
-  - service: media_player.turn_on
-    data: {}
-    target:
-      entity_id: media_player.revo
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
-  - service: media_player.volume_set
-    data:
-      volume_level: 0.2
-    target:
-      entity_id: media_player.revo
   mode: single
 - id: '1648663756045'
   alias: 'SYS: Github Push'

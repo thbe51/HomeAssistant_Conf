@@ -10,16 +10,6 @@ exclude:
     - media_player
     - updater
   entities:
-    - switch.rull_1
-    - switch.rull_2
-    - switch.rull_3
-    - switch.rull_4
-    - switch.rull_5
-    - switch.rull_6
-    - switch.rull_7
-    - switch.rull_8_2
-    - switch.rull_9_2
     - switch.hallampa_2
     - switch.gangen_2
     - switch.badrumskap_2
-    - switch.svart
