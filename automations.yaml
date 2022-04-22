@@ -44,16 +44,6 @@
     domain: zwave_js
     type: event.value_notification.central_scene
     property: scene
-    property_key: '002'
-    endpoint: 0
-    command_class: 91
-    subtype: Endpoint 0 Scene 002
-    id: panel-s-2
-  - platform: device
-    device_id: fda51218d52fdd7bac944caa3543a6e5
-    domain: zwave_js
-    type: event.value_notification.central_scene
-    property: scene
     property_key: '004'
     endpoint: 0
     command_class: 91
@@ -72,14 +62,6 @@
   condition: []
   action:
   - choose:
-    - conditions:
-      - condition: trigger
-        id: panel-s-2
-      sequence:
-      - service: switch.toggle
-        target:
-          entity_id: switch.varmefilt
-        data: {}
     - conditions:
       - condition: trigger
         id: panel-s-4
@@ -369,48 +351,37 @@
     default: []
   mode: single
 - id: '1635597184076'
-  alias: Sängvärme & timer + Radio
+  alias: EFTER GODNATT
   description: ''
   trigger:
-  - platform: event
-    event_type: timer.finished
-    id: bed.off
-    event_data:
-      entity_id: timer.sangvarme
   - platform: state
     entity_id: input_boolean.googlehome_natt_dag
     id: google.goodnight
     to: 'off'
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.efter_godnatt
+    id: timer_end
   condition: []
   action:
   - choose:
     - conditions:
       - condition: trigger
-        id: bed.off
-      sequence:
-      - service: switch.turn_off
-        target:
-          entity_id: switch.varmefilt
-        data: {}
-      - delay:
-          hours: 0
-          minutes: 5
-          seconds: 0
-          milliseconds: 0
-      - service: media_player.turn_off
-        data: {}
-        target:
-          entity_id: media_player.revo
-    - conditions:
-      - condition: trigger
         id: google.goodnight
       sequence:
       - service: timer.start
-        data:
-          duration: '0'
+        data: {}
         target:
-          entity_id:
-          - timer.sangvarme
+          entity_id: timer.efter_godnatt
+    - conditions:
+      - condition: trigger
+        id: timer_end
+      sequence:
+      - service: media_player.turn_off
+        data: {}
+        target:
+          entity_id: media_player.revo_radio
     default: []
   mode: single
 - id: '1635614367005'
@@ -2008,43 +1979,86 @@
     data: {}
   mode: single
 - id: '1649858320844'
-  alias: 'ZONE: Hemma'
+  alias: 'ZONE: Switch H/A'
   description: ''
   trigger:
-  - platform: zone
-    entity_id: device_tracker.samsung_s20_ultra_5g
-    zone: zone.home
-    event: enter
-  condition:
-  - condition: state
+  - platform: state
     entity_id: input_boolean.home_away
-    state: 'on'
-  - condition: sun
-    before: sunrise
-    after: sunset
+    to: 'on'
+    id: zone-away
+    from: 'off'
+  - platform: state
+    entity_id: input_boolean.home_away
+    to: 'off'
+    id: zone-home
+    from: 'on'
+  condition: []
   action:
-  - service: input_boolean.turn_off
-    data: {}
-    target:
-      entity_id: input_boolean.home_away
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: zone-away
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id:
+          - light.belysningsgrupp_sovrum
+          - light.belysningsgrupp_ovrigt
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id:
+          - switch.arbetsbord
+          - switch.gangen
+          - switch.hallampa
+    - conditions:
+      - condition: trigger
+        id: zone-home
+      sequence:
+      - service: light.turn_on
+        data:
+          brightness_pct: 30
+        target:
+          entity_id:
+          - light.belysningsgrupp_sovrum
+          - light.belysningsgrupp_ovrigt
+    default: []
   mode: single
 - id: '1649858494096'
-  alias: ZONE:Away
+  alias: ZONE:Device-Tracker - Home/Away
   description: ''
   trigger:
   - platform: zone
     entity_id: device_tracker.samsung_s20_ultra_5g
     zone: zone.home
     event: leave
-  condition:
-  - condition: state
-    entity_id: input_boolean.home_away
-    state: 'off'
+    id: dev-tracker-away
+  - platform: zone
+    entity_id: device_tracker.samsung_s20_ultra_5g
+    zone: zone.home
+    event: enter
+    id: dev-tracker-home
+  condition: []
   action:
-  - service: input_boolean.turn_on
-    data: {}
-    target:
-      entity_id: input_boolean.home_away
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: dev-tracker-away
+      sequence:
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.home_away
+    - conditions:
+      - condition: trigger
+        id: dev-tracker-home
+      sequence:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.home_away
+    default: []
   mode: single
 - id: '1650178057710'
   alias: 'TEST: SPEAKING'
