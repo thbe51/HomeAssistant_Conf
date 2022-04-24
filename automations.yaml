@@ -2015,6 +2015,17 @@
     - conditions:
       - condition: trigger
         id: zone-home
+      - condition: time
+        after: '18:00:00'
+        before: 06:00:00
+        weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+        - sat
+        - sun
       sequence:
       - service: light.turn_on
         data:
@@ -2022,6 +2033,10 @@
         target:
           entity_id:
           - light.belysningsgrupp_ovrigt
+      - service: switch.turn_on
+        data: {}
+        target:
+          entity_id: switch.hallampa
     default: []
   mode: single
 - id: '1649858494096'

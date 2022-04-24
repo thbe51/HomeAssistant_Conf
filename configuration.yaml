@@ -1,13 +1,58 @@
-homeassistant: !include conf/homeassistant.yaml
+####################################################
+#                                                  #
+#                Home Assistant                    #
+#                                                  #
+####################################################
+homeassistant:
+  name: Home
+  latitude: !secret homeassistant_latitude
+  longitude: !secret homeassistant_longitude
+  elevation: !secret homeassistant_elevation
+  unit_system: metric
+  time_zone: "Europe/Stockholm"
+  currency: SEK
+  external_url: !secret external_url
+  internal_url: !secret internal_url
+  customize_domain:
+    automation:
+      initial_state: on
+  auth_providers:
+    - type: homeassistant
+    - type: trusted_networks
+      trusted_networks:
+        - 192.168.66.0/24
+      allow_bypass_login: true
+
+####################################################
+#                                                  #
+#                Default Config                    #
+#                                                  #
+####################################################
+# https://www.home-assistant.io/integrations/default_config/
+# Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
-################################################################################
+
+####################################################
+#                                                  #
+#                  Automations                     #
+#                                                  #
+####################################################
+# https://www.home-assistant.io/integrations/automation/
 automation: !include automations.yaml
+
 cloud: !include conf/cloud.yaml
 #config
 #counter:
 #dhcp:
 #energy:
+
+####################################################
+#                                                  #
+#               Frontend/Themes                    #
+#                                                  #
+####################################################
 frontend: !include frontend.yaml
+
 history: !include conf/history.yaml
 #image:
 input_boolean: !include_dir_named input_boolean/
@@ -24,7 +69,15 @@ input_datetime: !include_dir_named input_datetime/
 #network:
 #person:
 scene: !include scenes.yaml
+
+####################################################
+#                                                  #
+#                  Scripts                         #
+#                                                  #
+####################################################
+# https://www.home-assistant.io/integrations/script/
 script: !include scripts.yaml
+
 #ssdp:
 #stream:
 #sun:
@@ -39,14 +92,116 @@ script: !include scripts.yaml
 # Other stuff
 discovery: !include conf/discovery.yaml
 google: !include conf/google.yaml
-http: !include conf/http.yaml
+
+####################################################
+#                                                  #
+#                     HTTP                         #
+#                                                  #
+####################################################
+# https://www.home-assistant.io/integrations/http/
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.30.33.0/24
+  ip_ban_enabled: false
+  login_attempts_threshold: 3
+#ssl_certificate: /ssl/fullchain.pem
+#ssl_key: /ssl/privkey.pem
+
 influxdb: !include influxdb.yaml
 logger: !include conf/logger.yaml
 lovelace: !include lovelace.yaml
-media_player: !include conf/media_player.yaml
+
+####################################################
+#                                                  #
+#                 Media player                     #
+#                                                  #
+####################################################
+# https://www.home-assistant.io/integrations/media_player/
+media_player:
+  - platform: frontier_silicon
+    host: 192.168.66.117
+    name: Revo Radio
+#- platform: cast
+#  name: Nest HUB
+#  host: 192.168.66.119
+
 netatmo: !include conf/netatmo.yaml
 notify: !include_dir_merge_list notify
-recorder: !include conf/recorder.yaml
-sensor: !include conf/sensor.yaml
-shell_command: !include conf/shell_command.yaml
-tts: !include conf/tts.yaml
+
+####################################################
+#                                                  #
+#                   Recorder                       #
+#                                                  #
+####################################################
+recorder:
+  db_url: !secret mariadb_url
+  commit_interval: 30
+
+####################################################
+#                                                  #
+#                 Sensors                          #
+#                                                  #
+####################################################
+sensor:
+  - platform: time_date
+    display_options:
+      - "time"
+      - "date"
+      - "date_time"
+      - "date_time_utc"
+      - "date_time_iso"
+      - "time_date"
+      - "time_utc"
+      - "beat"
+
+  - platform: template
+    sensors:
+      lights_on_count:
+        friendly_name: LightsCounter
+        value_template: >-
+          {% set lights = [
+            states.light.sovrummet,
+            states.light.bord,
+            states.light.forrad,
+            states.light.hue_color_floor_1,
+            states.light.kok,
+            states.light.sang,
+            states.light.sekretar,
+            states.light.sovrummet,
+            states.light.spirallampa,
+            states.light.vardagsrum,
+            states.light.badrummet,
+            states.switch.badrumskap,
+            states.switch.arbetsbord,
+            states.switch.hallampa,
+            states.switch.gangen
+            ] %}
+          {{ lights | selectattr('state','eq','on') | list | count }}
+
+####################################################
+#                                                  #
+#                 Shell Commands                   #
+#                                                  #
+####################################################
+# https://www.home-assistant.io/integrations/shell_command/
+shell_command:
+  disco_off: echo -e -n "\x01\x08\x00\xF2\x51\x01\x00\x05\x01\x51" > /dev/serial/by-id/usb-0658_0200-if00
+  disco_on: echo -e -n "\x01\x08\x00\xF2\x51\x01\x01\x05\x01\x50" > /dev/serial/by-id/usb-0658_0200-if00
+  pushupdates_to_github: /bin/bash pushupdates.sh
+
+####################################################
+#                                                  #
+#                     TTS                          #
+#                                                  #
+####################################################
+# https://www.home-assistant.io/integrations/tts/
+# Text to speech
+tts:
+  - platform: google_translate
+    language: en
+    cache: true
+    cache_dir: /tmp/tts
+    time_memory: 300
+    service_name: google_say
+    base_url: http://192.168.66.10:8123

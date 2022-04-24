@@ -1,7 +1,0 @@
-- platform: frontier_silicon
-  host: 192.168.66.117
-  name: Revo Radio
-
-#- platform: cast
-#  name: Nest HUB
-#  host: 192.168.66.119
