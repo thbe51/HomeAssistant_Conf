@@ -40,7 +40,29 @@ default_config:
 # https://www.home-assistant.io/integrations/automation/
 automation: !include automations.yaml
 
-cloud: !include conf/cloud.yaml
+####################################################
+#                                                  #
+#                    Cloud                         #
+#                                                  #
+####################################################
+cloud:
+  google_actions:
+    filter:
+      include_entities:
+        - input_boolean.googlehome_natt_dag
+#    include_domains:
+#      - switch
+#    exclude_entities:
+#      - switch.outside
+#  entity_config:
+#    switch.kitchen:
+#      name: Custom Name for Google Assistant
+#      aliases:
+#       - bright lights
+#       - entry lights
+#      room: living room
+
+
 #config
 #counter:
 #dhcp:
@@ -53,7 +75,28 @@ cloud: !include conf/cloud.yaml
 ####################################################
 frontend: !include frontend.yaml
 
-history: !include conf/history.yaml
+####################################################
+#                                                  #
+#                   History                        #
+#                                                  #
+####################################################
+history:
+  use_include_order: true
+  include:
+    domains:
+      - switch
+      - light
+    entities:
+      - device_tracker.samsung_s20_ultra_5g
+  exclude:
+    domains:
+      - media_player
+      - updater
+    entities:
+      - switch.hallampa_2
+      - switch.gangen_2
+      - switch.badrumskap_2
+
 #image:
 input_boolean: !include_dir_named input_boolean/
 #input_button:
@@ -126,8 +169,33 @@ media_player:
 #  name: Nest HUB
 #  host: 192.168.66.119
 
-netatmo: !include conf/netatmo.yaml
-notify: !include_dir_merge_list notify
+####################################################
+#                                                  #
+#                 Netatmo                          #
+#                                                  #
+####################################################
+netatmo:
+  client_id: !secret netatmo_id
+  client_secret: !secret netatmo_pwd
+
+####################################################
+#                                                  #
+#                 Notify                           #
+#                                                  #
+####################################################
+notify:
+  - platform: group
+    name: Notify Group
+    services:
+      - service: mobile_app_sm_g988b
+  - platform: smtp
+    name: !secret notify_name
+    sender: !secret notify_sender
+    recipient: !secret notify_recipient
+    server: !secret notify_server
+    port: 25
+    encryption: none
+    sender_name: HomeAssistant
 
 ####################################################
 #                                                  #

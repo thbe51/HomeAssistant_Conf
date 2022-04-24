@@ -1,4 +1,0 @@
-- platform: group
-  name: Notify Group
-  services:
-    - service: mobile_app_sm_g988b
