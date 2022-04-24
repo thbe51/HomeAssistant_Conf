@@ -73,7 +73,8 @@ cloud:
 #               Frontend/Themes                    #
 #                                                  #
 ####################################################
-frontend: !include frontend.yaml
+frontend:
+  themes: !include_dir_merge_named themes/
 
 ####################################################
 #                                                  #
@@ -132,9 +133,25 @@ script: !include scripts.yaml
 #zeroconf:
 #zone:
 # End of Default Config ########################################################
-# Other stuff
-discovery: !include conf/discovery.yaml
-google: !include conf/google.yaml
+
+####################################################
+#                                                  #
+#                     Discovery                    #
+#                                                  #
+####################################################
+discovery:
+  ignore:
+    - yamaha
+    - logitech_mediaserver
+
+####################################################
+#                                                  #
+#                     Google                       #
+#                                                  #
+####################################################
+google:
+  client_id: !secret google_id
+  client_secret: !secret google_pwd
 
 ####################################################
 #                                                  #
@@ -151,9 +168,49 @@ http:
 #ssl_certificate: /ssl/fullchain.pem
 #ssl_key: /ssl/privkey.pem
 
-influxdb: !include influxdb.yaml
-logger: !include conf/logger.yaml
-lovelace: !include lovelace.yaml
+
+####################################################
+#                                                  #
+#                     InfluxDB                     #
+#                                                  #
+####################################################
+influxdb:
+  host: 192.168.66.10
+  port: 8086
+  database: homeassistant
+  username: !secret influxuser
+  password: !secret influxpass
+  max_retries: 9
+  default_measurement: state
+
+####################################################
+#                                                  #
+#                     Logger                       #
+#                                                  #
+####################################################
+logger:
+  default: info
+  logs:
+    homeassistant.helpers.template: error
+
+####################################################
+#                                                  #
+#                     Lovelace                     #
+#                                                  #
+####################################################
+lovelace:
+  mode: storage
+  resources:
+    - url: https://fonts.googleapis.com/css?family=Comfortaa&display=swap
+      type: css
+    - url: /local/mini-graph-card-bundle.js?v=0.10.0
+      type: module
+    - url: https://unpkg.com/moment@2.29.1/min/moment-with-locales.js
+      type: module
+    - url: /local/banner-card.js?v=1
+      type: module
+    - url: /hacsfiles/atomic-calendar-revive/atomic-calendar-revive.js
+      type: module
 
 ####################################################
 #                                                  #
