@@ -98,7 +98,21 @@ history:
       - switch.badrumskap_2
 
 #image:
-input_boolean: !include_dir_named input_boolean/
+
+####################################################
+#                                                  #
+#                  input_boolean                   #
+#                                                  #
+####################################################
+input_boolean:
+  google_on_off:
+    name: Google auto <-> manuel
+    icon: mdi:google-assistant
+  taggs:
+    name: Tags
+    icon: mdi:code-tags
+    initial: false
+
 #input_button:
 
 ####################################################
