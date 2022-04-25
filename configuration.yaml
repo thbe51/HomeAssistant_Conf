@@ -62,7 +62,6 @@ cloud:
 #       - entry lights
 #      room: living room
 
-
 #config
 #counter:
 #dhcp:
@@ -132,7 +131,7 @@ script: !include scripts.yaml
 #webhooks:
 #zeroconf:
 #zone:
-# End of Default Config ########################################################
+# End of Default Config ############################
 
 ####################################################
 #                                                  #
@@ -167,7 +166,6 @@ http:
   login_attempts_threshold: 3
 #ssl_certificate: /ssl/fullchain.pem
 #ssl_key: /ssl/privkey.pem
-
 
 ####################################################
 #                                                  #

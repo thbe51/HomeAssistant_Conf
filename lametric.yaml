@@ -1,3 +1,0 @@
-lametric:
-  client_id: !secret lametric_id
-  client_secret: !secret lametric_secret
