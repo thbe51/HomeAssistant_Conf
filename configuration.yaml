@@ -108,10 +108,6 @@ input_boolean:
   google_on_off:
     name: Google auto <-> manuel
     icon: mdi:google-assistant
-  taggs:
-    name: Tags
-    icon: mdi:code-tags
-    initial: false
 
 #input_button:
 

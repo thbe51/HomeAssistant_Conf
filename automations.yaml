@@ -19,22 +19,6 @@
       entity_id: switch.gangen
     data: {}
   mode: single
-- id: '1633291780750'
-  alias: 'TAGG: Toggle belysning'
-  description: ''
-  trigger:
-  - platform: tag
-    tag_id: 3607e5a1-8180-4c2d-8080-a680dfcfe83d
-  condition: []
-  action:
-  - service: light.toggle
-    data:
-      brightness_pct: 35
-    target:
-      entity_id:
-      - light.belysningsgrupp_sovrum
-      - light.belysningsgrupp_ovrigt
-  mode: single
 - id: '1635525114817'
   alias: 'REMOTE: Panel sovrum'
   description: ''
