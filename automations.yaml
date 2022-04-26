@@ -2076,7 +2076,7 @@
   description: ''
   trigger:
   - platform: time
-    at: '16:00:00'
+    at: 07:15:00
   condition:
   - condition: time
     weekday:
@@ -2084,6 +2084,9 @@
     - mon
     - fri
     - sun
+    - sat
+    - thu
+    - tue
   action:
   - service: hassio.addon_stdin
     data:
@@ -2102,4 +2105,19 @@
     data:
       addon: 15d21743_samba_backup
       input: restore-sensor
+  mode: single
+- id: '1650909080037'
+  alias: Tag HALL TAKLAMPA is scanned
+  description: ''
+  trigger:
+  - platform: tag
+    tag_id: ac87d042-fcfd-4313-8b65-ec354dd0186c
+  condition: []
+  action:
+  - service: switch.toggle
+    data: {}
+    target:
+      entity_id:
+      - switch.hallampa
+      - switch.gangen
   mode: single
