@@ -2121,3 +2121,16 @@
       - switch.hallampa
       - switch.gangen
   mode: single
+- id: '1651656171282'
+  alias: Watchman report
+  description: ''
+  trigger:
+  - platform: time
+    at: 05:00:00
+  condition: []
+  action:
+  - service: watchman.report
+    data:
+      service: notify.mx_acat_se
+      send_notification: true
+  mode: single
