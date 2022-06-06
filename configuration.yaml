@@ -83,19 +83,16 @@ frontend:
 history:
   use_include_order: true
   include:
-    domains:
-      - switch
-      - light
     entities:
+      - sun.sun
+      - binary_sensor.dorrsensor_bad_access_control_window_door_is_open
+      - binary_sensor.dorrsensor_forrad_access_control_window_door_is_open
+      - binary_sensor.dorrsensor_kok_access_control_window_door_is_open
+      - binary_sensor.dorrsensor_vardagsrum_access_control_window_door_is_open
+      - binary_sensor.dorrsensor_sovrum_access_control_window_door_is_open
       - device_tracker.samsung_s20_ultra_5g
-  exclude:
     domains:
-      - media_player
-      - updater
-    entities:
-      - switch.hallampa_2
-      - switch.gangen_2
-      - switch.badrumskap_2
+      - automation  
 
 #image:
 
@@ -289,7 +286,19 @@ notify:
 ####################################################
 recorder:
   db_url: !secret mariadb_url
+  purge_keep_days: 3
   commit_interval: 30
+  include:
+    domains:
+      - automation
+    entities:
+      - sun.sun
+      - binary_sensor.dorrsensor_bad_access_control_window_door_is_open
+      - binary_sensor.dorrsensor_forrad_access_control_window_door_is_open
+      - binary_sensor.dorrsensor_kok_access_control_window_door_is_open
+      - binary_sensor.dorrsensor_vardagsrum_access_control_window_door_is_open
+      - binary_sensor.dorrsensor_sovrum_access_control_window_door_is_open
+      - device_tracker.samsung_s20_ultra_5g
 
 ####################################################
 #                                                  #
