@@ -299,6 +299,7 @@ recorder:
       - binary_sensor.dorrsensor_vardagsrum_access_control_window_door_is_open
       - binary_sensor.dorrsensor_sovrum_access_control_window_door_is_open
       - device_tracker.samsung_s20_ultra_5g
+      - sensor.last_meter_consumption_vedevagslingan_23
 
 ####################################################
 #                                                  #
