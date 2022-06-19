@@ -43,6 +43,16 @@
     command_class: 91
     subtype: Endpoint 0 Scene 008
     id: panel-s-8
+  - platform: device
+    device_id: fda51218d52fdd7bac944caa3543a6e5
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '007'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 007
+    id: panel-s-7
   condition: []
   action:
   - choose:
@@ -64,6 +74,15 @@
           entity_id:
           - input_boolean.rull_789_u_n
         data: {}
+    - conditions:
+      - condition: trigger
+        id: panel-s-7
+      sequence:
+      - service: cover.set_cover_position
+        data:
+          position: 30
+        target:
+          entity_id: cover.rull_8_2
     default: []
   mode: single
 - id: '1635527495085'
