@@ -91,8 +91,15 @@ history:
       - binary_sensor.dorrsensor_vardagsrum_access_control_window_door_is_open
       - binary_sensor.dorrsensor_sovrum_access_control_window_door_is_open
       - device_tracker.samsung_s20_ultra_5g
+#      - sensor.popp_wireless_thermostatic_valve_trv_air_temperature
+#      - sensor.popp_wireless_thermostatic_valve_trv_air_temperature_2
+#      - sensor.popp_wireless_thermostatic_valve_trv_air_temperature_3
+#      - sensor.popp_wireless_thermostatic_valve_trv_air_temperature_4
+#      - sensor.popp_wireless_thermostatic_valve_trv_air_temperature_5
+#      - sensor.popp_wireless_thermostatic_valve_trv_air_temperature_6
     domains:
-      - automation  
+      - automation
+      - sensor
 
 #image:
 
@@ -318,6 +325,12 @@ recorder:
       - sensor.syn3_drive_2_temperature
       - sensor.syn3_drive_3_temperature
       - sensor.syn3_drive_4_temperature
+      - sensor.popp_wireless_thermostatic_valve_trv_air_temperature
+      - sensor.popp_wireless_thermostatic_valve_trv_air_temperature_2
+      - sensor.popp_wireless_thermostatic_valve_trv_air_temperature_3
+      - sensor.popp_wireless_thermostatic_valve_trv_air_temperature_4
+      - sensor.popp_wireless_thermostatic_valve_trv_air_temperature_5
+      - sensor.popp_wireless_thermostatic_valve_trv_air_temperature_6
 
 ####################################################
 #                                                  #
