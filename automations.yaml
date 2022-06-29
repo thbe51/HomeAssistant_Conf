@@ -933,6 +933,12 @@
     to: 'off'
     id: cover-1_door_closed
     from: 'on'
+  - platform: state
+    entity_id:
+    - binary_sensor.vadring_access_control_window_door_is_open
+    to: 'off'
+    id: cover-2_door_closed
+    from: 'on'
   condition: []
   action:
   - choose:
@@ -955,7 +961,6 @@
           position: 0
         target:
           entity_id:
-          - cover.rull_2
           - cover.rull_3
       - condition: state
         entity_id: binary_sensor.dorrsensor_kok_access_control_window_door_is_open
@@ -964,7 +969,16 @@
         data:
           position: 0
         target:
-          entity_id: cover.rull_1
+          entity_id:
+          - cover.rull_1
+      - condition: state
+        entity_id: binary_sensor.vadring_access_control_window_door_is_open
+        state: 'off'
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_2
     - conditions:
       - condition: trigger
         id: cover-1_door_closed
@@ -976,6 +990,17 @@
         data: {}
         target:
           entity_id: cover.rull_1
+    - conditions:
+      - condition: trigger
+        id: cover-2_door_closed
+      - condition: state
+        entity_id: input_boolean.rull_123_u_n
+        state: 'on'
+      sequence:
+      - service: cover.close_cover
+        data: {}
+        target:
+          entity_id: cover.rull_2
     default: []
   mode: single
 - id: '1635750836926'
@@ -990,6 +1015,12 @@
     entity_id: input_boolean.rull_456_u_n
     id: rull-456-ner
     to: 'on'
+  - platform: state
+    entity_id:
+    - binary_sensor.vadring2_access_control_window_door_is_open
+    from: 'on'
+    to: 'off'
+    id: cover-5_door_closed
   - platform: state
     entity_id: binary_sensor.dorrsensor_vardagsrum_access_control_window_door_is_open
     from: 'on'
@@ -1017,7 +1048,6 @@
           position: 0
         target:
           entity_id:
-          - cover.rull_5
           - cover.rull_4
       - condition: state
         entity_id: binary_sensor.dorrsensor_vardagsrum_access_control_window_door_is_open
@@ -1027,6 +1057,14 @@
           position: 0
         target:
           entity_id: cover.rull_6
+      - condition: state
+        entity_id: binary_sensor.vadring2_access_control_window_door_is_open
+        state: 'off'
+      - service: cover.set_cover_position
+        data:
+          position: 0
+        target:
+          entity_id: cover.rull_5
     - conditions:
       - condition: trigger
         id: cover-6_door_closed
@@ -1038,6 +1076,14 @@
         data: {}
         target:
           entity_id: cover.rull_6
+    - conditions:
+      - condition: trigger
+        id: cover-5_door_closed
+      sequence:
+      - service: cover.close_cover
+        data: {}
+        target:
+          entity_id: cover.rull_5
     default: []
   mode: single
 - id: '1638685645995'
