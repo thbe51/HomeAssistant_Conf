@@ -1079,6 +1079,9 @@
     - conditions:
       - condition: trigger
         id: cover-5_door_closed
+      - condition: state
+        entity_id: input_boolean.rull_456_u_n
+        state: 'on'
       sequence:
       - service: cover.close_cover
         data: {}
