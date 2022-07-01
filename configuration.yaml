@@ -13,6 +13,25 @@ homeassistant:
   currency: SEK
   external_url: !secret external_url
   internal_url: !secret internal_url
+  customize:
+    binary_sensor.dorrsensor_bad_access_control_window_door_is_open:
+      friendly_name: DÖRR BADRUM
+    binary_sensor.dorrsensor_forrad_access_control_window_door_is_open:
+      friendly_name: DÖRR FÖRRÅD
+    binary_sensor.dorrsensor_kok_access_control_window_door_is_open:
+      friendly_name: DÖRR KÖK
+    binary_sensor.vadring_access_control_window_door_is_open:
+      friendly_name: FÖNSTER KÖK
+    binary_sensor.dorrsensor_vardagsrum_access_control_window_door_is_open:
+      friendly_name: DÖRR VARDAGSRUM
+    binary_sensor.vadring2_access_control_window_door_is_open:
+      friendly_name: FÖNSTER VARDAGSRUM
+    binary_sensor.dorrsensor_sovrum_access_control_window_door_is_open:
+      friendly_name: "DÖRR SOVRUM "
+    sun.sun:
+      friendly_name: "SOLEN "
+    device_tracker.samsung_s20_ultra_5g:
+      friendly_name: MOBILELEFON
   customize_domain:
     automation:
       initial_state: on

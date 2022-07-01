@@ -14,10 +14,11 @@
     value: 1
   condition: []
   action:
-  - service: switch.toggle
-    target:
-      entity_id: switch.gangen
+  - service: media_player.turn_on
     data: {}
+    target:
+      entity_id:
+      - media_player.revo
   mode: single
 - id: '1635525114817'
   alias: 'REMOTE: Panel sovrum'
@@ -645,7 +646,8 @@
     to: 'on'
     id: door.vardag
   - platform: state
-    entity_id: binary_sensor.dorrsensor_kok_access_control_window_door_is_open
+    entity_id:
+    - sensor.dorrsensor_kok_battery_level
     to: 'on'
     id: door.kok
   condition: []
@@ -2131,13 +2133,13 @@
   description: ''
   trigger:
   - platform: time
-    at: 08:55:00
+    at: 08:59:00
   condition: []
   action:
   - service: tts.google_say
     data:
       entity_id: media_player.nest_hub
-      message: The Time is 8:55 AM
+      message: The Time is 8:59 AM
   mode: single
 - id: '1650456946516'
   alias: 'BKUP: HA-Backup'
@@ -2188,4 +2190,24 @@
       entity_id:
       - switch.hallampa
       - switch.gangen
+  mode: single
+- id: '1656595557204'
+  alias: REVO radio off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.google_home
+    to: 'off'
+  condition: []
+  action:
+  - delay:
+      hours: 0
+      minutes: 30
+      seconds: 0
+      milliseconds: 0
+  - service: media_player.turn_off
+    data: {}
+    target:
+      entity_id: media_player.revo
   mode: single
