@@ -355,7 +355,7 @@
     default: []
   mode: single
 - id: '1635597184076'
-  alias: EFTER GODNATT
+  alias: 'GOOGLE: Efter godnatt'
   description: ''
   trigger:
   - platform: state
@@ -385,7 +385,7 @@
       - service: media_player.turn_off
         data: {}
         target:
-          entity_id: media_player.revo_radio
+          entity_id: media_player.revo
     default: []
   mode: single
 - id: '1635614367005'
@@ -2190,24 +2190,4 @@
       entity_id:
       - switch.hallampa
       - switch.gangen
-  mode: single
-- id: '1656595557204'
-  alias: REVO radio off
-  description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - input_boolean.google_home
-    to: 'off'
-  condition: []
-  action:
-  - delay:
-      hours: 0
-      minutes: 30
-      seconds: 0
-      milliseconds: 0
-  - service: media_player.turn_off
-    data: {}
-    target:
-      entity_id: media_player.revo
   mode: single
