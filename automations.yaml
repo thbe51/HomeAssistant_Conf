@@ -54,6 +54,16 @@
     command_class: 91
     subtype: Endpoint 0 Scene 007
     id: panel-s-7
+  - platform: device
+    device_id: fda51218d52fdd7bac944caa3543a6e5
+    domain: zwave_js
+    type: event.value_notification.central_scene
+    property: scene
+    property_key: '001'
+    endpoint: 0
+    command_class: 91
+    subtype: Endpoint 0 Scene 001
+    id: ' grupp-bel-toggle'
   condition: []
   action:
   - choose:
@@ -84,6 +94,16 @@
           position: 30
         target:
           entity_id: cover.rull_8_2
+    - conditions:
+      - condition: trigger
+        id: ' grupp-bel-toggle'
+      sequence:
+      - service: light.toggle
+        data:
+          brightness_pct: 15
+          color_temp: 333
+        target:
+          entity_id: light.belysningsgrupp_sovrum
     default: []
   mode: single
 - id: '1635527495085'
