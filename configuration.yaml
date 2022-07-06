@@ -204,20 +204,6 @@ http:
 
 ####################################################
 #                                                  #
-#                     InfluxDB                     #
-#                                                  #
-####################################################
-#influxdb:
-#  host: 192.168.66.10
-#  port: 8086
-#  database: homeassistant
-#  username: !secret influxuser
-#  password: !secret influxpass
-#  max_retries: 9
-#  default_measurement: state
-
-####################################################
-#                                                  #
 #                     Logger                       #
 #                                                  #
 ####################################################
@@ -244,21 +230,6 @@ lovelace:
       type: module
     - url: /hacsfiles/atomic-calendar-revive/atomic-calendar-revive.js
       type: module
-
-####################################################
-#                                                  #
-#                 Media player                     #
-#                                                  #
-####################################################
-# https://www.home-assistant.io/integrations/media_player/
-#media_player:
-#  - platform: frontier_silicon
-#    host: 192.168.66.117
-#    name: Revo Radio
-
-#- platform: cast
-#  name: Nest HUB
-#  host: 192.168.66.119
 
 ####################################################
 #                                                  #
