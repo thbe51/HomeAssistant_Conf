@@ -31,7 +31,7 @@ homeassistant:
     sun.sun:
       friendly_name: "SOLEN "
     device_tracker.samsung_s20_ultra_5g:
-      friendly_name: "MOBILELEFON "
+      friendly_name: "MOBILTELEFON "
   customize_domain:
     automation:
       initial_state: on
@@ -351,3 +351,11 @@ tts:
     base_url: http://192.168.66.10:8123
 
 template: !include template.yaml
+
+# ShellyforHASS
+shelly:
+  version: true
+  sensors:
+    - all
+#  discover_by_ip:
+#    - 192.168.66.41
