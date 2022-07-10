@@ -351,11 +351,3 @@ tts:
     base_url: http://192.168.66.10:8123
 
 template: !include template.yaml
-
-# ShellyforHASS
-shelly:
-  version: true
-  sensors:
-    - all
-#  discover_by_ip:
-#    - 192.168.66.41
