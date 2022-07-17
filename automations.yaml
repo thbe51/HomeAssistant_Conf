@@ -2211,3 +2211,40 @@
       - switch.hallampa
       - switch.gangen
   mode: single
+- id: '1657980843968'
+  alias: 'Light: Room with 1 Motion sensor and 1 lamp'
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 9601c9fbd145f8d3a732148142afe09c
+    entity_id: binary_sensor.kok_sensor_home_security_motion_detection
+    domain: binary_sensor
+    id: motion-detected
+  - type: no_motion
+    platform: device
+    device_id: 9601c9fbd145f8d3a732148142afe09c
+    entity_id: binary_sensor.kok_sensor_home_security_motion_detection
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition: []
+  action:
+  - if:
+    - condition: trigger
+      id: motion-detected
+    then:
+    - service: light.turn_on
+      data:
+        brightness_pct: 80
+        color_temp: 333
+      target:
+        entity_id: light.kok
+    else:
+    - service: light.turn_off
+      data: {}
+      target:
+        entity_id: light.kok
+  mode: single
