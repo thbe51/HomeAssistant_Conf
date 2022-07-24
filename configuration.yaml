@@ -183,9 +183,9 @@ discovery:
 #                     Google                       #
 #                                                  #
 ####################################################
-google:
-  client_id: !secret google_id
-  client_secret: !secret google_pwd
+#google:
+#  client_id: !secret google_id
+#  client_secret: !secret google_pwd
 
 ####################################################
 #                                                  #
@@ -236,9 +236,9 @@ lovelace:
 #                 Netatmo                          #
 #                                                  #
 ####################################################
-netatmo:
-  client_id: !secret netatmo_id
-  client_secret: !secret netatmo_pwd
+#netatmo:
+#  client_id: !secret netatmo_id
+#  client_secret: !secret netatmo_pwd
 
 ####################################################
 #                                                  #
@@ -270,7 +270,6 @@ recorder:
   commit_interval: 1
   exclude:
     domains:
-      - media_player
       - scene
       - script
       - update
@@ -348,6 +347,6 @@ tts:
     cache_dir: /tmp/tts
     time_memory: 300
     service_name: google_say
-    base_url: http://192.168.66.10:8123
+#   base_url: http://192.168.66.10:8123
 
 template: !include template.yaml

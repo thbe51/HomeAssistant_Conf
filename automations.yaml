@@ -14,11 +14,10 @@
     value: 1
   condition: []
   action:
-  - service: media_player.turn_on
+  - service: switch.toggle
     data: {}
     target:
-      entity_id:
-      - media_player.revo
+      entity_id: switch.gangen
   mode: single
 - id: '1635525114817'
   alias: 'REMOTE: Panel sovrum'
@@ -405,7 +404,8 @@
       - service: media_player.turn_off
         data: {}
         target:
-          entity_id: media_player.revo
+          entity_id:
+          - media_player.revo_2
     default: []
   mode: single
 - id: '1635614367005'
